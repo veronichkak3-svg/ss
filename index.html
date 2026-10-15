@@ -3,34 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Водорості | Біологія 7 клас</title>
-  <meta name="description" content="Ультрасучасний наочний гід про водорості для уроку біології в 7 класі. Зручно для проектора, ПК та смартфонів.">
+  <title>Світ Водоростей — Таємниці Океану</title>
   
-  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+  <!-- Modern Ukrainian-supported fonts: Unbounded & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Unbounded:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
-            outfit: ['Outfit', 'sans-serif'],
+            unbounded: ['Unbounded', 'sans-serif'],
             sans: ['Plus Jakarta Sans', 'sans-serif'],
           },
           colors: {
-            ocean: {
-              abyss: '#020b18',
-              deep: '#04172e',
-              midnight: '#072547',
-              navy: '#0a3460',
-              marine: '#0c4a75',
-              cyan: '#06b6d4',
-              bright: '#38bdf8',
+            aqua: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
             }
           }
         }
@@ -44,154 +45,138 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #020b18; }
-    ::-webkit-scrollbar-thumb { background: #0e7490; border-radius: 4px; }
-
-    /* Glassmorphism */
-    .glass-card {
-      background: rgba(7, 37, 71, 0.65);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(56, 189, 248, 0.18);
-      box-shadow: 0 10px 30px -5px rgba(2, 11, 24, 0.7);
+    /* Luminous Ocean Gradient */
+    body {
+      background: linear-gradient(135deg, #093554 0%, #0c4a6e 25%, #075985 50%, #0369a1 75%, #0f766e 100%);
+      background-attachment: fixed;
     }
+
+    /* Crystal Clear Glassmorphism */
+    .glass-card {
+      background: rgba(14, 63, 98, 0.42);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 16px 40px -10px rgba(4, 28, 48, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .glass-card:hover {
+      border-color: rgba(94, 234, 212, 0.5);
+      transform: translateY(-3px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
     .glass-nav {
-      background: rgba(4, 23, 46, 0.85);
+      background: rgba(9, 53, 84, 0.65);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
     }
 
-    /* Projector Presentation Mode (Extra High Contrast & Legibility) */
-    body.projector-mode {
-      font-size: 110%;
-    }
-    body.projector-mode .glass-card {
-      background: rgba(4, 23, 46, 0.92);
-      border-color: rgba(56, 189, 248, 0.45);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
-    }
-    body.projector-mode p, body.projector-mode span {
-      font-weight: 500;
+    /* Water Caustics / Sunlight Ripples */
+    .water-light {
+      background: radial-gradient(ellipse at 50% 0%, rgba(153, 246, 228, 0.28) 0%, rgba(56, 189, 248, 0.15) 35%, transparent 70%);
     }
   </style>
 </head>
 
-<body class="bg-ocean-abyss text-slate-100 font-sans selection:bg-cyan-500 selection:text-white min-h-screen relative overflow-x-hidden transition-all duration-300">
+<body class="text-white min-h-screen relative overflow-x-hidden selection:bg-teal-300 selection:text-slate-900 font-sans">
 
-  <!-- ================= INTERACTIVE BUBBLE CANVAS ================= -->
-  <canvas id="bubbles-canvas" class="fixed inset-0 pointer-events-auto z-0 opacity-75" title="Клікай на бульбашки, щоб лускати їх!"></canvas>
+  <!-- ================= LIVING WATER CANVAS (Bubbles) ================= -->
+  <canvas id="bubbles-canvas" class="fixed inset-0 pointer-events-auto z-0 opacity-80" title="Клікай, щоб лускати бульбашки"></canvas>
 
-  <!-- ================= SUBTLE AMBIENT OCEAN GLOW ================= -->
+  <!-- ================= SUNLIGHT RAYS & WATER HIGHLIGHTS ================= -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[90vw] h-[400px] bg-cyan-500/15 rounded-full blur-[140px]"></div>
-    <div class="absolute bottom-0 right-0 w-[50vw] h-[400px] bg-emerald-500/10 rounded-full blur-[150px]"></div>
+    <div class="water-light absolute inset-0"></div>
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[70vw] h-[350px] bg-teal-400/15 rounded-full blur-[130px]"></div>
+    <div class="absolute bottom-10 left-10 w-[40vw] h-[300px] bg-cyan-300/15 rounded-full blur-[140px]"></div>
   </div>
 
-  <!-- ================= QUICK HUD / FLOATING BUTTONS ================= -->
-  <div class="fixed bottom-4 right-4 z-40 flex items-center gap-2 pointer-events-auto">
-    <!-- Bubble Counter -->
-    <div id="bubble-counter" class="glass-card px-3 py-1.5 rounded-full text-xs font-bold text-cyan-300 border border-cyan-400/30 flex items-center gap-1.5 shadow-lg select-none cursor-pointer" title="Лускай бульбашки мишкою чи пальцем">
+  <!-- ================= FLOATING BUBBLE COUNTER ================= -->
+  <div class="fixed bottom-5 right-5 z-40 flex items-center gap-2 pointer-events-auto">
+    <div class="glass-card px-3.5 py-1.5 rounded-full text-xs font-bold text-teal-200 flex items-center gap-2 shadow-xl border border-teal-300/30 select-none cursor-pointer">
       <span>🫧</span>
-      <span id="bubble-count" class="font-mono text-white text-sm">0</span>
+      <span>Спіймано: <strong id="bubble-count" class="text-white font-mono text-sm">0</strong></span>
     </div>
-
-    <!-- Presentation / Fullscreen Button (Super for school projector!) -->
-    <button id="fullscreen-btn" class="glass-card w-10 h-10 rounded-full text-cyan-300 hover:text-white flex items-center justify-center border border-cyan-400/40 shadow-lg transition active:scale-95" title="Повноекранний режим для проектора">
-      <i data-lucide="maximize" class="w-4 h-4"></i>
-    </button>
   </div>
 
-  <!-- ================= NAVIGATION BAR ================= -->
+  <!-- ================= ELEGANT MINIMAL HEADER ================= -->
   <header class="fixed top-0 left-0 right-0 z-50 glass-nav">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
       
-      <!-- Logo / Title -->
       <a href="#" class="flex items-center gap-3">
-        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-cyan-500/20 shrink-0">
-          <i data-lucide="waves" class="w-5 h-5 sm:w-6 sm:h-6 text-slate-950 stroke-[2.5]"></i>
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-300 to-cyan-400 flex items-center justify-center shadow-lg shadow-teal-500/20 text-slate-950 font-black text-lg">
+          🌊
         </div>
         <div>
-          <span class="font-outfit font-black text-lg sm:text-2xl text-white tracking-tight">
-            Водорості <span class="text-cyan-400">• 7 Клас</span>
+          <span class="font-unbounded font-bold text-base sm:text-lg tracking-tight text-white">
+            Світ <span class="text-teal-300">Водоростей</span>
           </span>
-          <span class="block text-[11px] sm:text-xs text-cyan-300/80 uppercase font-semibold tracking-wider">Урок біології рослин</span>
         </div>
       </a>
 
-      <!-- Quick Nav Buttons for Projector/Teacher -->
-      <div class="flex items-center gap-2">
-        <a href="#groups" class="hidden sm:inline-flex px-3.5 py-1.5 rounded-xl glass-card text-xs sm:text-sm font-semibold text-slate-200 hover:text-cyan-300 transition">
-          🌿 3 Групи
+      <!-- Clean Navigation -->
+      <nav class="flex items-center gap-2 sm:gap-4">
+        <a href="#groups" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-teal-100 hover:text-white hover:bg-white/10 transition">
+          Групи
         </a>
-        <a href="#facts" class="hidden sm:inline-flex px-3.5 py-1.5 rounded-xl glass-card text-xs sm:text-sm font-semibold text-slate-200 hover:text-cyan-300 transition">
-          ⚡ Топ-факти
+        <a href="#facts" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-teal-100 hover:text-white hover:bg-white/10 transition">
+          Факти
         </a>
-        <a href="#quiz" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-cyan-400 to-emerald-400 text-slate-950 shadow-md hover:scale-105 active:scale-95 transition flex items-center gap-1.5">
-          <i data-lucide="check-circle" class="w-4 h-4 stroke-[2.5]"></i>
-          <span>Тест (5 пит.)</span>
+        <a href="#quiz" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-teal-400 hover:bg-teal-300 text-slate-950 shadow-md transition flex items-center gap-1.5">
+          <span>Бліц-тест</span>
         </a>
 
         <!-- Sound Toggle -->
-        <button id="sound-btn" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl glass-card flex items-center justify-center text-slate-300 hover:text-cyan-300 transition" title="Звукові ефекти">
-          <i data-lucide="volume-2" id="sound-on" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-          <i data-lucide="volume-x" id="sound-off" class="w-4 h-4 sm:w-5 sm:h-5 hidden text-slate-500"></i>
+        <button id="sound-btn" class="w-9 h-9 rounded-lg glass-card flex items-center justify-center text-teal-200 hover:text-white transition ml-1" title="Звук">
+          <i data-lucide="volume-2" id="sound-on" class="w-4 h-4"></i>
+          <i data-lucide="volume-x" id="sound-off" class="w-4 h-4 hidden text-slate-400"></i>
         </button>
-      </div>
+      </nav>
 
     </div>
   </header>
 
-  <main class="relative z-10 pt-20 sm:pt-28">
+  <main class="relative z-10 pt-24 sm:pt-32">
 
-    <!-- ================= HERO: BIG IMPACT, MINIMAL TEXT ================= -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 text-center">
+    <!-- ================= HERO ================= -->
+    <section class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-14 text-center">
       
-      <!-- Class Badge -->
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/40 text-cyan-300 text-xs sm:text-sm font-bold uppercase tracking-wider mb-6">
-        <span>🌊 Шкільна програма • 7 Клас</span>
-      </div>
-
-      <!-- Main Heading (Huge for Projector visibility) -->
-      <h1 class="font-outfit font-black text-4xl sm:text-6xl lg:text-7xl text-white tracking-tight mb-4 leading-[1.1]">
-        Володарі Океану: <br class="hidden sm:inline" />
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400">
-          Усе найголовніше за 5 хвилин
+      <h1 class="font-unbounded font-black text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight mb-4 leading-tight">
+        Найдавніші володарі води, <br class="hidden sm:inline" />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-200 via-cyan-200 to-white">
+          що подарували Землі кисень
         </span>
       </h1>
 
-      <!-- Short Punchy Subtitle -->
-      <p class="text-slate-300 text-base sm:text-xl max-w-2xl mx-auto font-medium mb-10 leading-snug">
-        Не мають коренів, стебел та квіток, але виробляють більше половини кисню нашої планети!
+      <p class="text-cyan-100/90 text-sm sm:text-lg max-w-2xl mx-auto font-normal mb-10 leading-relaxed">
+        У них немає листя, коренів чи квіток — їхнє тіло це єдина слань. Проте без них життя на нашій планеті було б неможливим.
       </p>
 
-      <!-- 4 GIANT STAT TILES (Instant reading on projector & phones) -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 max-w-5xl mx-auto">
+      <!-- 4 Crystal Highlight Tiles -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 max-w-4xl mx-auto">
         
-        <div class="glass-card p-4 sm:p-6 rounded-2xl border-cyan-400/30 text-center">
-          <div class="text-3xl sm:text-5xl font-black text-cyan-400 font-outfit mb-1">~70%</div>
-          <div class="font-bold text-sm sm:text-base text-white">Кисню планети</div>
-          <div class="text-xs text-slate-400 mt-1">виробляє морський фітопланктон</div>
+        <div class="glass-card p-4 sm:p-5 rounded-2xl text-center">
+          <div class="font-unbounded text-2xl sm:text-4xl font-bold text-teal-300 mb-1">~70%</div>
+          <div class="font-semibold text-xs sm:text-sm text-white">Кисню планети</div>
+          <div class="text-[11px] text-cyan-200/80 mt-0.5">виробляє фітопланктон</div>
         </div>
 
-        <div class="glass-card p-4 sm:p-6 rounded-2xl border-emerald-400/30 text-center">
-          <div class="text-3xl sm:text-5xl font-black text-emerald-400 font-outfit mb-1">0</div>
-          <div class="font-bold text-sm sm:text-base text-white">Справжніх органів</div>
-          <div class="text-xs text-slate-400 mt-1">тіло — це суцільна слань (талом)</div>
+        <div class="glass-card p-4 sm:p-5 rounded-2xl text-center">
+          <div class="font-unbounded text-2xl sm:text-4xl font-bold text-cyan-300 mb-1">0</div>
+          <div class="font-semibold text-xs sm:text-sm text-white">Органів і тканин</div>
+          <div class="text-[11px] text-cyan-200/80 mt-0.5">усе тіло — це слань (талом)</div>
         </div>
 
-        <div class="glass-card p-4 sm:p-6 rounded-2xl border-amber-400/30 text-center">
-          <div class="text-3xl sm:text-5xl font-black text-amber-400 font-outfit mb-1">до 60 м</div>
-          <div class="font-bold text-sm sm:text-base text-white">Гігант Макроцистіс</div>
-          <div class="text-xs text-slate-400 mt-1">найдовша бура водорость світу</div>
+        <div class="glass-card p-4 sm:p-5 rounded-2xl text-center">
+          <div class="font-unbounded text-2xl sm:text-4xl font-bold text-amber-300 mb-1">до 60 м</div>
+          <div class="font-semibold text-xs sm:text-sm text-white">Бурий гігант</div>
+          <div class="text-[11px] text-cyan-200/80 mt-0.5">водорость Макроцистіс</div>
         </div>
 
-        <div class="glass-card p-4 sm:p-6 rounded-2xl border-rose-400/30 text-center">
-          <div class="text-3xl sm:text-5xl font-black text-rose-400 font-outfit mb-1">200+ м</div>
-          <div class="font-bold text-sm sm:text-base text-white">Глибина багрянок</div>
-          <div class="text-xs text-slate-400 mt-1">ростуть у найтемніших глибинах</div>
+        <div class="glass-card p-4 sm:p-5 rounded-2xl text-center">
+          <div class="font-unbounded text-2xl sm:text-4xl font-bold text-rose-300 mb-1">200+ м</div>
+          <div class="font-semibold text-xs sm:text-sm text-white">Глибина багрянок</div>
+          <div class="text-[11px] text-cyan-200/80 mt-0.5">ростуть у сутінках моря</div>
         </div>
 
       </div>
@@ -199,132 +184,116 @@
     </section>
 
 
-    <!-- ================= 3 MAIN GROUPS: PUNCHY & VISUAL ================= -->
-    <section id="groups" class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <!-- ================= 3 MAIN GROUPS ================= -->
+    <section id="groups" class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
       
       <div class="text-center mb-8">
-        <h2 class="font-outfit font-black text-3xl sm:text-5xl text-white tracking-tight">
-          3 Головні Групи Водоростей
+        <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white tracking-tight">
+          Три родини водоростей
         </h2>
-        <p class="text-cyan-400 font-semibold text-sm sm:text-base mt-2">
-          Забарвлення залежить від глибини та пігментів!
+        <p class="text-teal-200 text-xs sm:text-sm mt-1">
+          Колір залежить від глибини та сонячних променів
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         <!-- 1. ЗЕЛЕНІ -->
-        <div class="glass-card rounded-3xl p-6 sm:p-8 border-emerald-500/40 relative flex flex-col justify-between">
+        <div class="glass-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between">
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                0 – 25 метрів
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-400/20 text-emerald-200 border border-emerald-300/30">
+                0 – 25 м
               </span>
-              <span class="text-2xl">🌱</span>
+              <span class="text-xl">🌿</span>
             </div>
 
-            <h3 class="font-outfit font-black text-2xl sm:text-3xl text-emerald-300 mb-1">Зелені</h3>
-            <div class="text-xs text-slate-400 mb-4 font-semibold uppercase tracking-wider">Пігмент: Хлорофіл</div>
+            <h3 class="font-unbounded font-bold text-xl text-emerald-200 mb-1">Зелені</h3>
+            <div class="text-xs text-teal-200/70 mb-4 font-medium">Пігмент: Хлорофіл</div>
 
-            <!-- Bullet points with zero fluff -->
-            <ul class="space-y-3 text-sm sm:text-base text-slate-200">
-              <li class="flex items-start gap-2.5">
-                <span class="text-emerald-400 font-bold">✔</span>
-                <span><strong>Хламідомонада:</strong> має червоне вічко (стигму) та 2 джгутики.</span>
+            <ul class="space-y-2.5 text-xs sm:text-sm text-cyan-50">
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-300 font-bold">•</span>
+                <span><strong>Хламідомонада:</strong> має світлочутливе червоне вічко (стигму) та джгутики.</span>
               </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-emerald-400 font-bold">✔</span>
-                <span><strong>Хлорела:</strong> 50% білка, літала в космос для очищення повітря.</span>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-300 font-bold">•</span>
+                <span><strong>Хлорела:</strong> 50% білка, використовувалась у космонавтиці.</span>
               </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-emerald-400 font-bold">✔</span>
-                <span><strong>Спірогіра:</strong> спіральний стрічкоподібний хроматофор.</span>
-              </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-emerald-400 font-bold">✔</span>
-                <span><strong>Ульва:</strong> їстівний «морський салат».</span>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-300 font-bold">•</span>
+                <span><strong>Спірогіра:</strong> нитчаста зі спіральним хроматофором.</span>
               </li>
             </ul>
           </div>
-
-          <div class="mt-6 pt-4 border-t border-white/10 text-xs text-emerald-300 font-bold">
-            💡 Предки всіх наземних рослин!
+          <div class="mt-5 pt-3 border-t border-white/10 text-[11px] text-emerald-200 font-medium">
+            Пращури всіх дерев і квітів на суші
           </div>
         </div>
 
         <!-- 2. БУРІ -->
-        <div class="glass-card rounded-3xl p-6 sm:p-8 border-amber-500/40 relative flex flex-col justify-between">
+        <div class="glass-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between">
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                до 100 метрів
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-400/20 text-amber-200 border border-amber-300/30">
+                до 100 м
               </span>
-              <span class="text-2xl">🌊</span>
+              <span class="text-xl">🌊</span>
             </div>
 
-            <h3 class="font-outfit font-black text-2xl sm:text-3xl text-amber-300 mb-1">Бурі</h3>
-            <div class="text-xs text-slate-400 mb-4 font-semibold uppercase tracking-wider">Пігмент: Фукоксантин</div>
+            <h3 class="font-unbounded font-bold text-xl text-amber-200 mb-1">Бурі</h3>
+            <div class="text-xs text-teal-200/70 mb-4 font-medium">Пігмент: Фукоксантин</div>
 
-            <ul class="space-y-3 text-sm sm:text-base text-slate-200">
-              <li class="flex items-start gap-2.5">
-                <span class="text-amber-400 font-bold">✔</span>
-                <span><strong>Виключно багатоклітинні:</strong> живуть тільки в морях та океанах.</span>
+            <ul class="space-y-2.5 text-xs sm:text-sm text-cyan-50">
+              <li class="flex items-start gap-2">
+                <span class="text-amber-300 font-bold">•</span>
+                <span><strong>Тільки багатоклітинні:</strong> живуть виключно в морях.</span>
               </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-amber-400 font-bold">✔</span>
-                <span><strong>Ламінарія (морська капуста):</strong> рекордсмен за вмістом йоду.</span>
+              <li class="flex items-start gap-2">
+                <span class="text-amber-300 font-bold">•</span>
+                <span><strong>Ламінарія:</strong> знаменита «морська капуста», джерело йоду.</span>
               </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-amber-400 font-bold">✔</span>
-                <span><strong>Макроцистіс:</strong> до 60 метрів, утворює підводні ліси.</span>
-              </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-amber-400 font-bold">✔</span>
-                <span><strong>Повітряні пухирці:</strong> утримують велетенське тіло біля сонця.</span>
+              <li class="flex items-start gap-2">
+                <span class="text-amber-300 font-bold">•</span>
+                <span><strong>Макроцистіс:</strong> утворює справжні підводні ліси.</span>
               </li>
             </ul>
           </div>
-
-          <div class="mt-6 pt-4 border-t border-white/10 text-xs text-amber-300 font-bold">
-            💡 Захищають щитоподібну залозу людини!
+          <div class="mt-5 pt-3 border-t border-white/10 text-[11px] text-amber-200 font-medium">
+            Мають повітряні кульки для плавучості
           </div>
         </div>
 
         <!-- 3. ЧЕРВОНІ -->
-        <div class="glass-card rounded-3xl p-6 sm:p-8 border-rose-500/40 relative flex flex-col justify-between">
+        <div class="glass-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between">
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/40">
-                до 200+ метрів
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-400/20 text-rose-200 border border-rose-300/30">
+                до 200+ м
               </span>
-              <span class="text-2xl">🏮</span>
+              <span class="text-xl">🏮</span>
             </div>
 
-            <h3 class="font-outfit font-black text-2xl sm:text-3xl text-rose-300 mb-1">Червоні</h3>
-            <div class="text-xs text-slate-400 mb-4 font-semibold uppercase tracking-wider">Пігмент: Фікоеритрин</div>
+            <h3 class="font-unbounded font-bold text-xl text-rose-200 mb-1">Червоні</h3>
+            <div class="text-xs text-teal-200/70 mb-4 font-medium">Пігмент: Фікоеритрин</div>
 
-            <ul class="space-y-3 text-sm sm:text-base text-slate-200">
-              <li class="flex items-start gap-2.5">
-                <span class="text-rose-400 font-bold">✔</span>
-                <span><strong>Чемпіони глибин:</strong> вловлюють залишки синього світла на дні.</span>
+            <ul class="space-y-2.5 text-xs sm:text-sm text-cyan-50">
+              <li class="flex items-start gap-2">
+                <span class="text-rose-300 font-bold">•</span>
+                <span><strong>Рекордсмени глибини:</strong> ростуть там, де майже немає світла.</span>
               </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-rose-400 font-bold">✔</span>
-                <span><strong>Агар-агар:</strong> роблять мармелад, зефір та пастилу.</span>
+              <li class="flex items-start gap-2">
+                <span class="text-rose-300 font-bold">•</span>
+                <span><strong>Агар-агар:</strong> основа для мармеладу, зефіру та лабораторій.</span>
               </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-rose-400 font-bold">✔</span>
-                <span><strong>Порфіра:</strong> відомі листи норі для приготування суші.</span>
-              </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-rose-400 font-bold">✔</span>
-                <span><strong>Лабораторії:</strong> агар є поживним середовищем для бактерій.</span>
+              <li class="flex items-start gap-2">
+                <span class="text-rose-300 font-bold">•</span>
+                <span><strong>Порфіра:</strong> водорость для суші (норі).</span>
               </li>
             </ul>
           </div>
-
-          <div class="mt-6 pt-4 border-t border-white/10 text-xs text-rose-300 font-bold">
-            💡 Замінник тваринного желатину!
+          <div class="mt-5 pt-3 border-t border-white/10 text-[11px] text-rose-200 font-medium">
+            Рослинна альтернатива тваринному желатину
           </div>
         </div>
 
@@ -333,84 +302,51 @@
     </section>
 
 
-    <!-- ================= 6 SHARPEST FACTS: MINIMAL WORDS ================= -->
-    <section id="facts" class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <!-- ================= 6 SHARP FACTS ================= -->
+    <section id="facts" class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
       
       <div class="text-center mb-8">
-        <h2 class="font-outfit font-black text-3xl sm:text-5xl text-white tracking-tight">
-          6 Фактів, які легко запам'ятати
+        <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white tracking-tight">
+          Цікаві факти
         </h2>
-        <p class="text-slate-400 text-sm sm:text-base mt-2">
-          Головні тези для відповіді біля дошки на «12 балів»:
-        </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         
-        <!-- FACT 1 -->
-        <div class="glass-card p-5 rounded-2xl border-cyan-400/30 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0 text-xl font-bold">
-            🌬️
-          </div>
-          <div>
-            <h4 class="font-outfit font-bold text-lg text-white">Кожен 2-й вдих людини</h4>
-            <p class="text-xs sm:text-sm text-slate-300 mt-1">Океанічний фітопланктон дає більше кисню, ніж усі тропічні ліси Землі разом узяті.</p>
-          </div>
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-2xl mb-2">💨</div>
+          <h4 class="font-bold text-base text-white mb-1">Головні легені планети</h4>
+          <p class="text-xs sm:text-sm text-cyan-100/85">Мікроскопічний планктон в океані утворює більшість кисню, яким дихає людина.</p>
         </div>
 
-        <!-- FACT 2 -->
-        <div class="glass-card p-5 rounded-2xl border-emerald-400/30 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 text-xl font-bold">
-            👁️
-          </div>
-          <div>
-            <h4 class="font-outfit font-bold text-lg text-white">Клітина з «оком»</h4>
-            <p class="text-xs sm:text-sm text-slate-300 mt-1">Хламідомонада бачить світло завдяки червоній стигмі й сама пливе до сонця.</p>
-          </div>
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-2xl mb-2">👁️</div>
+          <h4 class="font-bold text-base text-white mb-1">Око в одній клітині</h4>
+          <p class="text-xs sm:text-sm text-cyan-100/85">Хламідомонада визначає, де світло, за допомогою маленької червоної цятки — стигми.</p>
         </div>
 
-        <!-- FACT 3 -->
-        <div class="glass-card p-5 rounded-2xl border-rose-400/30 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-300 flex items-center justify-center shrink-0 text-xl font-bold">
-            🍮
-          </div>
-          <div>
-            <h4 class="font-outfit font-bold text-lg text-white">Мармелад з водоростей</h4>
-            <p class="text-xs sm:text-sm text-slate-300 mt-1">Агар-агар виварюють із червоних водоростей: він утворює желе без тваринних жирів.</p>
-          </div>
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-2xl mb-2">🍮</div>
+          <h4 class="font-bold text-base text-white mb-1">Солодощі з водоростей</h4>
+          <p class="text-xs sm:text-sm text-cyan-100/85">Агар-агар з червоних водоростей робить пружним ваш улюблений фруктовий мармелад.</p>
         </div>
 
-        <!-- FACT 4 -->
-        <div class="glass-card p-5 rounded-2xl border-amber-400/30 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0 text-xl font-bold">
-            🩺
-          </div>
-          <div>
-            <h4 class="font-outfit font-bold text-lg text-white">Щит для здоров'я</h4>
-            <p class="text-xs sm:text-sm text-slate-300 mt-1">30 грамів ламінарії на день повністю покривають норму йоду для роботи мозку.</p>
-          </div>
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-2xl mb-2">🩺</div>
+          <h4 class="font-bold text-base text-white mb-1">Океанічний йод</h4>
+          <p class="text-xs sm:text-sm text-cyan-100/85">Ламінарія вбирає йод з морської води, захищаючи пам'ять і здоров'я людини.</p>
         </div>
 
-        <!-- FACT 5 -->
-        <div class="glass-card p-5 rounded-2xl border-cyan-400/30 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0 text-xl font-bold">
-            ✨
-          </div>
-          <div>
-            <h4 class="font-outfit font-bold text-lg text-white">Світіння нічних хвиль</h4>
-            <p class="text-xs sm:text-sm text-slate-300 mt-1">Водорость <em>Ночесвітка</em> спалахує неоновим сяйвом, коли її турбують хвилі.</p>
-          </div>
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-2xl mb-2">✨</div>
+          <h4 class="font-bold text-base text-white mb-1">Нічне сяйво хвиль</h4>
+          <p class="text-xs sm:text-sm text-cyan-100/85">Водорость ночесвітка світиться яскравим блакитним світлом при кожному русі води.</p>
         </div>
 
-        <!-- FACT 6 -->
-        <div class="glass-card p-5 rounded-2xl border-emerald-400/30 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 text-xl font-bold">
-            🌳
-          </div>
-          <div>
-            <h4 class="font-outfit font-bold text-lg text-white">Прабабусі дубів і яблунь</h4>
-            <p class="text-xs sm:text-sm text-slate-300 mt-1">470 млн років тому саме зелені водорості вийшли на сушу й дали початок усім рослинам.</p>
-          </div>
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-2xl mb-2">🚀</div>
+          <h4 class="font-bold text-base text-white mb-1">Космічна хлорела</h4>
+          <p class="text-xs sm:text-sm text-cyan-100/85">Через високий вміст білка та швидкий поділ хлорелу досліджують для космічних станцій.</p>
         </div>
 
       </div>
@@ -418,76 +354,61 @@
     </section>
 
 
-    <!-- ================= INTERACTIVE QUIZ (PROJECTOR & MOBILE OPTIMIZED) ================= -->
-    <section id="quiz" class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+    <!-- ================= SIMPLE & NATURAL QUIZ ================= -->
+    <section id="quiz" class="max-w-2xl mx-auto px-4 sm:px-6 py-14">
       
-      <div class="text-center mb-8">
-        <span class="px-3.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 text-xs font-bold uppercase tracking-wider">
-          🧠 Перевірка знань
-        </span>
-        <h2 class="font-outfit font-black text-3xl sm:text-5xl text-white tracking-tight mt-2">
-          Експрес-Тест (5 Запитань)
+      <div class="text-center mb-6">
+        <h2 class="font-unbounded font-bold text-2xl sm:text-3xl text-white tracking-tight">
+          Бліц: 5 запитань
         </h2>
-        <p class="text-slate-400 text-sm sm:text-base mt-1">
-          Ідеально для інтерактивної дошки або опитування в класі!
-        </p>
+        <p class="text-teal-200 text-xs sm:text-sm mt-1">Оберіть правильний варіант відповіді:</p>
       </div>
 
-      <!-- Quiz Box -->
-      <div class="glass-card rounded-3xl p-6 sm:p-8 border-cyan-400/40 shadow-2xl relative" id="quiz-card">
+      <div class="glass-card rounded-3xl p-6 sm:p-8 relative" id="quiz-box">
         
-        <!-- Progress bar -->
-        <div class="mb-6">
-          <div class="flex items-center justify-between text-xs sm:text-sm font-bold mb-2">
-            <span id="quiz-counter" class="text-cyan-300">Питання 1 з 5</span>
-            <span id="quiz-score" class="text-emerald-400 font-mono">Бали: 0 / 5</span>
-          </div>
-          <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-white/10">
-            <div id="quiz-progress-bar" class="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 rounded-full transition-all duration-300" style="width: 20%;"></div>
-          </div>
+        <!-- Progress -->
+        <div class="flex items-center justify-between text-xs font-semibold text-teal-200 mb-3">
+          <span id="q-counter">Питання 1 з 5</span>
+          <span id="q-score" class="font-mono">Бали: 0 / 5</span>
+        </div>
+        <div class="w-full bg-slate-900/40 h-2 rounded-full overflow-hidden mb-6 border border-white/10">
+          <div id="q-bar" class="h-full bg-gradient-to-r from-teal-300 to-cyan-300 rounded-full transition-all duration-300" style="width: 20%;"></div>
         </div>
 
-        <!-- Question Title -->
-        <div id="quiz-active-area">
-          <h3 id="quiz-question" class="font-outfit font-bold text-lg sm:text-2xl text-white mb-6 leading-snug">
-            Завантаження...
+        <!-- Question View -->
+        <div id="q-content">
+          <h3 id="q-title" class="font-unbounded font-semibold text-lg sm:text-xl text-white mb-5 leading-snug">
+            Завантаження питання...
           </h3>
 
-          <!-- Options -->
-          <div id="quiz-options" class="space-y-3 mb-6">
-            <!-- Rendered by JS -->
+          <div id="q-options" class="space-y-3 mb-5">
+            <!-- Dynamic Buttons -->
           </div>
 
-          <!-- Instant explanation banner -->
-          <div id="quiz-hint" class="hidden p-4 rounded-xl bg-ocean-deep/90 border border-cyan-400/30 text-xs sm:text-sm text-slate-200">
-            <strong id="quiz-hint-title" class="block mb-0.5"></strong>
-            <span id="quiz-hint-text"></span>
+          <div id="q-hint" class="hidden p-3.5 rounded-xl bg-teal-950/60 border border-teal-300/40 text-xs sm:text-sm text-teal-100">
+            <span id="q-hint-text"></span>
           </div>
 
-          <!-- Next Button -->
-          <div class="mt-6 flex justify-end">
-            <button id="quiz-next" class="hidden px-6 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-400 to-emerald-400 text-slate-950 shadow-lg hover:scale-105 active:scale-95 transition">
-              Наступне питання ➔
+          <div class="mt-5 flex justify-end">
+            <button id="q-next" class="hidden px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-teal-300 hover:bg-teal-200 text-slate-950 transition">
+              Далі ➔
             </button>
           </div>
         </div>
 
-        <!-- Quiz Final Screen -->
-        <div id="quiz-finish" class="hidden text-center py-6">
-          <div class="text-6xl mb-3" id="quiz-trophy">🏆</div>
-          <h3 class="font-outfit font-black text-3xl sm:text-4xl text-white mb-2" id="quiz-result-header">
-            Чудовий результат!
-          </h3>
-          <p class="text-slate-300 text-sm sm:text-base mb-6" id="quiz-result-msg"></p>
-          
-          <div class="glass-card max-w-xs mx-auto p-5 rounded-2xl border-cyan-400/40 mb-6">
-            <div class="text-xs text-slate-400 uppercase font-semibold">Підсумковий бал</div>
-            <div class="font-outfit font-black text-5xl text-cyan-300 my-1" id="quiz-final-points">5 / 5</div>
-            <div class="text-xs font-bold text-emerald-400" id="quiz-rank-label">🔱 Знавець водоростей</div>
+        <!-- Result View -->
+        <div id="q-result" class="hidden text-center py-4">
+          <div class="text-5xl mb-2">🎉</div>
+          <h3 class="font-unbounded font-bold text-2xl text-white mb-1">Чудово!</h3>
+          <p class="text-teal-100 text-xs sm:text-sm mb-4">Усі питання пройдено.</p>
+
+          <div class="glass-card max-w-[200px] mx-auto p-4 rounded-2xl mb-5">
+            <div class="text-[11px] text-teal-200 uppercase font-semibold">Ваш результат</div>
+            <div class="font-unbounded font-black text-3xl text-teal-300 my-1" id="q-final-score">5 / 5</div>
           </div>
 
-          <button id="quiz-restart" class="px-8 py-3 rounded-xl font-bold text-sm bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-lg hover:scale-105 active:scale-95 transition">
-            🔄 Пройти ще раз
+          <button id="q-restart" class="px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-teal-300 hover:bg-teal-200 text-slate-950 transition">
+            Пройти ще раз
           </button>
         </div>
 
@@ -497,31 +418,25 @@
 
   </main>
 
-  <!-- ================= FOOTER ================= -->
-  <footer class="mt-16 border-t border-white/10 glass-nav py-8 text-center text-xs text-slate-400 px-4">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+  <!-- ================= CLEAN FOOTER ================= -->
+  <footer class="mt-12 border-t border-white/10 glass-nav py-6 text-center text-xs text-teal-200/80 px-4">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="font-bold text-white text-sm">
-        AlgaeSphere • Біологія 7 Клас
+        Світ Водоростей
       </div>
       <div>
-        Оптимізовано для шкільних проекторів, інтерактивних дошок та смартфонів 🇺🇦
-      </div>
-      <div class="text-cyan-400">
-        Урок про водорості
+        Природа, фотосинтез та океанські глибини
       </div>
     </div>
   </footer>
 
-  <!-- ================= LOGIC SCRIPT ================= -->
+  <!-- ================= SCRIPTS ================= -->
   <script>
     lucide.createIcons();
 
-    /* --- Sound Synthesizer (Zero dependencies) --- */
-    class MiniSound {
-      constructor() {
-        this.enabled = true;
-        this.ctx = null;
-      }
+    /* Sound Synthesizer */
+    class SimpleAudio {
+      constructor() { this.enabled = true; this.ctx = null; }
       init() {
         if (!this.ctx) {
           const AC = window.AudioContext || window.webkitAudioContext;
@@ -536,101 +451,71 @@
         const now = this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
         const g = this.ctx.createGain();
-        osc.frequency.setValueAtTime(600 + Math.random() * 200, now);
-        osc.frequency.exponentialRampToValueAtTime(150, now + 0.07);
-        g.gain.setValueAtTime(0.18, now);
-        g.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+        osc.frequency.setValueAtTime(650, now);
+        osc.frequency.exponentialRampToValueAtTime(200, now + 0.06);
+        g.gain.setValueAtTime(0.12, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
         osc.connect(g);
         g.connect(this.ctx.destination);
         osc.start(now);
-        osc.stop(now + 0.07);
+        osc.stop(now + 0.06);
       }
-      correct() {
+      chime() {
         if (!this.enabled) return;
         this.init();
         if (!this.ctx) return;
         const now = this.ctx.currentTime;
-        [523.25, 659.25, 783.99].forEach((f, i) => {
+        [587.33, 739.99, 880].forEach((freq, i) => {
           const osc = this.ctx.createOscillator();
           const g = this.ctx.createGain();
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(f, now + i * 0.06);
-          g.gain.setValueAtTime(0.12, now + i * 0.06);
-          g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.3);
+          osc.frequency.setValueAtTime(freq, now + i * 0.05);
+          g.gain.setValueAtTime(0.08, now + i * 0.05);
+          g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.25);
           osc.connect(g);
           g.connect(this.ctx.destination);
-          osc.start(now + i * 0.06);
-          osc.stop(now + i * 0.06 + 0.3);
+          osc.start(now + i * 0.05);
+          osc.stop(now + i * 0.05 + 0.25);
         });
       }
-      wrong() {
-        if (!this.enabled) return;
-        this.init();
-        if (!this.ctx) return;
-        const now = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const g = this.ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(180, now);
-        osc.frequency.linearRampToValueAtTime(110, now + 0.2);
-        g.gain.setValueAtTime(0.14, now);
-        g.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-        osc.connect(g);
-        g.connect(this.ctx.destination);
-        osc.start(now);
-        osc.stop(now + 0.2);
-      }
     }
-    const audio = new MiniSound();
+    const sound = new SimpleAudio();
 
-    // Sound toggle
-    const soundBtn = document.getElementById('sound-btn');
-    const soundOn = document.getElementById('sound-on');
-    const soundOff = document.getElementById('sound-off');
-    soundBtn.addEventListener('click', () => {
-      audio.enabled = !audio.enabled;
-      soundOn.classList.toggle('hidden', !audio.enabled);
-      soundOff.classList.toggle('hidden', audio.enabled);
-      if (audio.enabled) audio.pop();
+    // Sound button
+    const sBtn = document.getElementById('sound-btn');
+    const sOn = document.getElementById('sound-on');
+    const sOff = document.getElementById('sound-off');
+    sBtn.addEventListener('click', () => {
+      sound.enabled = !sound.enabled;
+      sOn.classList.toggle('hidden', !sound.enabled);
+      sOff.classList.toggle('hidden', sound.enabled);
+      if (sound.enabled) sound.pop();
     });
 
-    // Fullscreen for Projector
-    const fsBtn = document.getElementById('fullscreen-btn');
-    fsBtn.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
-        document.body.classList.add('projector-mode');
-      } else {
-        document.exitFullscreen().catch(() => {});
-        document.body.classList.remove('projector-mode');
-      }
-    });
-
-    /* --- Interactive Canvas Bubbles --- */
+    /* Bright Canvas Bubbles */
     const canvas = document.getElementById('bubbles-canvas');
     const ctx = canvas.getContext('2d');
-    let popped = 0;
+    let poppedCount = 0;
     const bubbleCountEl = document.getElementById('bubble-count');
 
-    let w = (canvas.width = window.innerWidth);
-    let h = (canvas.height = window.innerHeight);
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
     window.addEventListener('resize', () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
     });
 
     class Bubble {
-      constructor(isInit = false) { this.reset(isInit); }
-      reset(isInit = false) {
-        this.r = Math.random() * 16 + 6;
-        this.x = Math.random() * w;
-        this.y = isInit ? Math.random() * h : h + this.r + Math.random() * 30;
-        this.speed = Math.random() * 1.1 + 0.6;
+      constructor(init = false) { this.reset(init); }
+      reset(init = false) {
+        this.r = Math.random() * 15 + 6;
+        this.x = Math.random() * width;
+        this.y = init ? Math.random() * height : height + this.r + 20;
+        this.speed = Math.random() * 0.9 + 0.5;
         this.wobble = Math.random() * Math.PI * 2;
         this.wobbleSpeed = Math.random() * 0.02 + 0.01;
-        this.amp = Math.random() * 15 + 8;
-        this.alpha = Math.random() * 0.4 + 0.2;
+        this.amp = Math.random() * 18 + 6;
       }
       update() {
         this.y -= this.speed;
@@ -642,211 +527,171 @@
         ctx.save();
         ctx.beginPath();
         ctx.arc(this.curX, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(56, 189, 248, ${this.alpha * 0.25})`;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
         ctx.fill();
         ctx.lineWidth = 1;
-        ctx.strokeStyle = `rgba(186, 230, 253, ${this.alpha})`;
+        ctx.strokeStyle = 'rgba(204, 251, 241, 0.4)';
         ctx.stroke();
-        // highlight
+
         ctx.beginPath();
         ctx.arc(this.curX - this.r * 0.35, this.y - this.r * 0.35, this.r * 0.22, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
         ctx.fill();
         ctx.restore();
       }
-      clicked(mx, my) {
+      isHit(mx, my) {
         const dx = (this.curX || this.x) - mx;
         const dy = this.y - my;
         return (dx * dx + dy * dy) <= (this.r + 14) * (this.r + 14);
       }
     }
 
-    const bubbleList = Array.from({ length: window.innerWidth < 640 ? 25 : 50 }, () => new Bubble(true));
-    function loop() {
-      ctx.clearRect(0, 0, w, h);
-      bubbleList.forEach(b => { b.update(); b.draw(); });
-      requestAnimationFrame(loop);
+    const bubbles = Array.from({ length: window.innerWidth < 640 ? 25 : 45 }, () => new Bubble(true));
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+      bubbles.forEach(b => { b.update(); b.draw(); });
+      requestAnimationFrame(render);
     }
-    loop();
+    render();
 
     canvas.addEventListener('click', (e) => {
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left;
       const my = e.clientY - rect.top;
-      for (let i = 0; i < bubbleList.length; i++) {
-        if (bubbleList[i].clicked(mx, my)) {
-          audio.pop();
-          popped++;
-          bubbleCountEl.textContent = popped;
-          bubbleList[i].reset(false);
+      for (let i = 0; i < bubbles.length; i++) {
+        if (bubbles[i].isHit(mx, my)) {
+          sound.pop();
+          poppedCount++;
+          bubbleCountEl.textContent = poppedCount;
+          bubbles[i].reset(false);
           break;
         }
       }
     });
 
-    /* --- Quiz Data: 7th Grade Biology (Minimal Text, High Precision) --- */
-    const questions = [
+    /* Simple, Approachable Quiz */
+    const quizData = [
       {
-        q: "1. Яка група водоростей здатна жити на найбільших глибинах океану (понад 200 м)?",
-        opts: ["Бурі водорості", "Червоні водорості (багрянки)", "Зелені водорості", "Діатомові водорості"],
-        correct: 1,
-        hint: "Червоні пігменти (фікобіліни) найкраще вловлюють залишки слабкого синього світла на глибині."
-      },
-      {
-        q: "2. Яка зелена одноклітинна водорость має червоне «вічко» (стигму) та два джгутики?",
-        opts: ["Хлорела", "Ламінарія", "Хламідомонада", "Спірогіра"],
-        correct: 2,
-        hint: "Хламідомонада використовує стигму, щоб знаходити світло для фотосинтезу (позитивний фототаксис)."
-      },
-      {
-        q: "3. З якої речовини червоних водоростей виготовляють мармелад, зефір та пастилу?",
-        opts: ["Агар-агар", "Крохмаль", "Йод", "Хлорофіл"],
+        question: "Яка водорость відома як «морська капуста» та багата на йод?",
+        options: ["Ламінарія", "Хлорела", "Спірогіра"],
         correct: 0,
-        hint: "Агар-агар видобувають з багрянок — це рослинний замінник желатину в харчовій промисловості."
+        hint: "Ламінарія — це бура водорость, яка накопичує йод із морської води."
       },
       {
-        q: "4. Яка бура водорость відома як «морська капуста» і захищає щитоподібну залозу людини?",
-        opts: ["Ульва", "Порфіра", "Ламінарія", "Саргасум"],
-        correct: 2,
-        hint: "Ламінарія містить рекордну концентрацію органічного йоду, необхідного для здоров'я."
+        question: "За допомогою чого хламідомонада визначає, де знаходиться світло?",
+        options: ["Червоне вічко (стигма)", "Корінець", "Хлорофіловий хоботок"],
+        correct: 0,
+        hint: "Стигма вловлює світлові промені, допомагаючи клітині плисти на світло."
       },
       {
-        q: "5. Чому водорості називають «нижчими рослинами»?",
-        opts: [
-          "Вони ростуть тільки на великій глибині",
-          "Їхнє тіло (слань) не поділене на справжні органи і тканини",
-          "Вони взагалі не утворюють кисню",
-          "Вони розмножуються виключно насінням"
-        ],
-        correct: 1,
-        hint: "У водоростей немає справжніх коренів, стебел та листків — їхнє тіло називається сланню (таломом)."
+        question: "З якої речовини червоних водоростей виготовляють мармелад та зефір?",
+        options: ["Агар-агар", "Крохмаль", "Цукровий пісок"],
+        correct: 0,
+        hint: "Агар-агар — це природний желюючий компонент із багрянок."
+      },
+      {
+        question: "Хто виробляє найбільшу частку кисню на нашій планеті?",
+        options: ["Океанічні мікроводорості та планктон", "Тільки кімнатні рослини", "Гриби в лісі"],
+        correct: 0,
+        hint: "Понад 50-70% усього кисню синтезують саме мікроскопічні жителі води."
+      },
+      {
+        question: "Чи є у водоростей справжні корені, стебла та листки?",
+        options: ["Ні, їхнє тіло — це слань (талом)", "Так, як і в дуба чи яблуні", "Є тільки коріння"],
+        correct: 0,
+        hint: "Водорості не розділені на справжні органи, тому їх називають нижчими рослинами."
       }
     ];
 
-    let currentQ = 0;
+    let currentIdx = 0;
     let score = 0;
     let answered = false;
 
-    const qCounter = document.getElementById('quiz-counter');
-    const qScore = document.getElementById('quiz-score');
-    const qBar = document.getElementById('quiz-progress-bar');
-    const qText = document.getElementById('quiz-question');
-    const qOpts = document.getElementById('quiz-options');
-    const qHint = document.getElementById('quiz-hint');
-    const qHintTitle = document.getElementById('quiz-hint-title');
-    const qHintText = document.getElementById('quiz-hint-text');
-    const qNext = document.getElementById('quiz-next');
+    const qCounter = document.getElementById('q-counter');
+    const qScore = document.getElementById('q-score');
+    const qBar = document.getElementById('q-bar');
+    const qTitle = document.getElementById('q-title');
+    const qOptions = document.getElementById('q-options');
+    const qHint = document.getElementById('q-hint');
+    const qHintText = document.getElementById('q-hint-text');
+    const qNext = document.getElementById('q-next');
+    const qContent = document.getElementById('q-content');
+    const qResult = document.getElementById('q-result');
+    const qFinalScore = document.getElementById('q-final-score');
+    const qRestart = document.getElementById('q-restart');
 
-    const activeArea = document.getElementById('quiz-active-area');
-    const finishArea = document.getElementById('quiz-finish');
-    const finalPoints = document.getElementById('quiz-final-points');
-    const rankLabel = document.getElementById('quiz-rank-label');
-    const resultMsg = document.getElementById('quiz-result-msg');
-    const restartBtn = document.getElementById('quiz-restart');
-
-    function loadQuestion(i) {
+    function displayQuestion(index) {
       answered = false;
-      const data = questions[i];
-      qCounter.textContent = `Питання ${i + 1} з ${questions.length}`;
-      qBar.style.width = `${((i + 1) / questions.length) * 100}%`;
-      qScore.textContent = `Бали: ${score} / ${questions.length}`;
-      qText.textContent = data.q;
+      const q = quizData[index];
+      qCounter.textContent = `Питання ${index + 1} з ${quizData.length}`;
+      qScore.textContent = `Бали: ${score} / ${quizData.length}`;
+      qBar.style.width = `${((index + 1) / quizData.length) * 100}%`;
+      qTitle.textContent = q.question;
       qHint.classList.add('hidden');
       qNext.classList.add('hidden');
 
-      qOpts.innerHTML = '';
-      data.opts.forEach((opt, optIndex) => {
+      qOptions.innerHTML = '';
+      q.options.forEach((opt, i) => {
         const btn = document.createElement('button');
-        btn.className = `w-full text-left p-3.5 sm:p-4 rounded-xl border border-white/10 bg-ocean-deep/70 hover:bg-ocean-deep hover:border-cyan-400/50 text-sm sm:text-base font-semibold text-slate-100 transition flex items-center justify-between group active:scale-[0.99]`;
-        btn.innerHTML = `
-          <span class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center text-xs font-mono text-cyan-300">
-              ${['A', 'Б', 'В', 'Г'][optIndex]}
-            </span>
-            <span>${opt}</span>
-          </span>
-          <span class="status-mark text-lg"></span>
-        `;
-        btn.addEventListener('click', () => pickOption(optIndex, btn));
-        qOpts.appendChild(btn);
+        btn.className = 'w-full text-left p-3.5 sm:p-4 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-sm sm:text-base font-semibold text-white transition flex items-center justify-between active:scale-[0.99]';
+        btn.innerHTML = `<span>${opt}</span><span class="mark-icon text-lg"></span>`;
+        btn.addEventListener('click', () => handleChoice(i, btn));
+        qOptions.appendChild(btn);
       });
     }
 
-    function pickOption(idx, btnEl) {
+    function handleChoice(selectedIdx, buttonEl) {
       if (answered) return;
       answered = true;
-      const q = questions[currentQ];
-      const allBtns = qOpts.querySelectorAll('button');
+      const q = quizData[currentIdx];
+      const allButtons = qOptions.querySelectorAll('button');
 
-      if (idx === q.correct) {
-        audio.correct();
+      if (selectedIdx === q.correct) {
+        sound.chime();
         score++;
-        qScore.textContent = `Бали: ${score} / ${questions.length}`;
-        btnEl.className = 'w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-emerald-400 bg-emerald-950/70 text-sm sm:text-base font-bold text-emerald-200 flex items-center justify-between shadow-lg shadow-emerald-500/20';
-        btnEl.querySelector('.status-mark').textContent = '✅';
-        qHintTitle.textContent = '🎉 Вірно!';
-        qHintTitle.className = 'block mb-0.5 text-emerald-300 font-bold';
+        qScore.textContent = `Бали: ${score} / ${quizData.length}`;
+        buttonEl.className = 'w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-emerald-300 bg-emerald-500/30 text-sm sm:text-base font-bold text-white flex items-center justify-between shadow-lg';
+        buttonEl.querySelector('.mark-icon').textContent = '✓';
       } else {
-        audio.wrong();
-        btnEl.className = 'w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-rose-500 bg-rose-950/70 text-sm sm:text-base font-bold text-rose-200 flex items-center justify-between shadow-lg shadow-rose-500/20';
-        btnEl.querySelector('.status-mark').textContent = '❌';
-
-        // Highlight correct button
-        const correctBtn = allBtns[q.correct];
-        correctBtn.className = 'w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-emerald-400 bg-emerald-950/50 text-sm sm:text-base font-bold text-emerald-200 flex items-center justify-between';
-        correctBtn.querySelector('.status-mark').textContent = '✅';
-
-        qHintTitle.textContent = '💡 Запам\'ятайте:';
-        qHintTitle.className = 'block mb-0.5 text-cyan-300 font-bold';
+        sound.pop();
+        buttonEl.className = 'w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-rose-300 bg-rose-500/30 text-sm sm:text-base font-bold text-white flex items-center justify-between shadow-lg';
+        buttonEl.querySelector('.mark-icon').textContent = '✕';
+        allButtons[q.correct].className = 'w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-emerald-300 bg-emerald-500/20 text-sm sm:text-base font-bold text-white flex items-center justify-between';
+        allButtons[q.correct].querySelector('.mark-icon').textContent = '✓';
       }
 
       qHintText.textContent = q.hint;
       qHint.classList.remove('hidden');
       qNext.classList.remove('hidden');
-      if (currentQ === questions.length - 1) {
-        qNext.textContent = 'Завершити тест 🏆';
+
+      if (currentIdx === quizData.length - 1) {
+        qNext.textContent = 'Завершити тест ✨';
       }
     }
 
     qNext.addEventListener('click', () => {
-      audio.pop();
-      if (currentQ < questions.length - 1) {
-        currentQ++;
-        loadQuestion(currentQ);
+      sound.pop();
+      if (currentIdx < quizData.length - 1) {
+        currentIdx++;
+        displayQuestion(currentIdx);
       } else {
-        showResults();
+        qContent.classList.add('hidden');
+        qResult.classList.remove('hidden');
+        qFinalScore.textContent = `${score} / ${quizData.length}`;
+        confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
       }
     });
 
-    function showResults() {
-      activeArea.classList.add('hidden');
-      finishArea.classList.remove('hidden');
-      finalPoints.textContent = `${score} / ${questions.length}`;
-
-      if (score === 5) {
-        rankLabel.textContent = '🔱 Володар Океану (5/5)';
-        resultMsg.textContent = 'Ідеально! Тему водоростей засвоєно на всі 100%!';
-        confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
-      } else if (score >= 3) {
-        rankLabel.textContent = '🤿 Дослідник Глибин (3-4/5)';
-        resultMsg.textContent = 'Гарна робота! Основні групи водоростей ти знаєш впевнено.';
-        confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
-      } else {
-        rankLabel.textContent = '🫧 Юний Натураліст';
-        resultMsg.textContent = 'Гарна спроба! Переглянь короткі картки вгорі та повтори тест.';
-      }
-    }
-
-    restartBtn.addEventListener('click', () => {
-      audio.pop();
+    qRestart.addEventListener('click', () => {
+      sound.pop();
+      currentIdx = 0;
       score = 0;
-      currentQ = 0;
-      finishArea.classList.add('hidden');
-      activeArea.classList.remove('hidden');
-      loadQuestion(0);
+      qResult.classList.add('hidden');
+      qContent.classList.remove('hidden');
+      displayQuestion(0);
     });
 
-    loadQuestion(0);
+    displayQuestion(0);
   </script>
 </body>
 </html>
