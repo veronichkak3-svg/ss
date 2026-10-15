@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="uk" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Водорості: Володарі Океану — Інтерактивна Презентація</title>
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="theme-color" content="#093554">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Водорості: Володарі Океану — Презентація">
+  <meta property="og:description" content="Сучасна інтерактивна презентація про таємниці водоростей: анатомія слані, лісові велетні океану та користь для людства.">
+
+  <!-- Typography: Unbounded & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Unbounded:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            unbounded: ['Unbounded', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #062238 0%, #09395d 30%, #064e6f 60%, #0369a1 85%, #0d5f57 100%);
+      background-attachment: fixed;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .slide {
+      opacity: 0;
+      transform: scale(0.96) translateY(16px);
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+      z-index: 10;
+    }
+
+    .glass-box {
+      background: rgba(10, 48, 77, 0.55);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 25px 60px -15px rgba(2, 18, 33, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .glass-card {
+      background: rgba(14, 63, 98, 0.45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 12px 30px -8px rgba(3, 21, 38, 0.4);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(94, 234, 212, 0.6);
+      transform: translateY(-4px);
+    }
+
+    .water-glow {
+      background: radial-gradient(circle at 50% 15%, rgba(45, 212, 191, 0.22) 0%, rgba(56, 189, 248, 0.12) 45%, transparent 75%);
+    }
+
+    @keyframes waveFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(1.5deg); }
+    }
+    .floating-anim {
+      animation: waveFloat 5s ease-in-out infinite;
+    }
+  </style>
+</head>
+
+<body class="h-full w-full overflow-hidden text-white select-none relative">
+
+  <!-- Living Bubbles Canvas -->
+  <canvas id="bubbles-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-70"></canvas>
+
+  <!-- Ambient Light -->
+  <div class="fixed inset-0 pointer-events-none z-0">
+    <div class="water-glow absolute inset-0"></div>
+    <div class="absolute -top-24 -left-24 w-96 h-96 bg-teal-400/20 rounded-full blur-[140px]"></div>
+    <div class="absolute -bottom-24 -right-24 w-[32rem] h-[32rem] bg-sky-400/15 rounded-full blur-[160px]"></div>
+  </div>
+
+  <!-- TOP BAR -->
+  <header class="fixed top-0 left-0 right-0 z-40 px-4 sm:px-8 py-3 sm:py-4 flex items-center justify-between pointer-events-auto">
+    <a href="./" class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full glass-card hover:border-teal-300 text-teal-200 text-xs sm:text-sm font-bold transition group">
+      <span class="group-hover:-translate-x-1 transition-transform">←</span>
+      <span>В Атлас</span>
+    </a>
+
+    <!-- Slide Indicators -->
+    <div class="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full glass-card" id="indicators">
+      <!-- Generated via JS -->
+    </div>
+
+    <!-- Fullscreen Toggle -->
+    <button id="fullscreen-btn" class="px-3.5 py-1.5 rounded-full glass-card text-xs sm:text-sm text-teal-200 hover:text-white font-medium hover:border-teal-300 transition flex items-center gap-1.5" title="Повноекранний режим (F)">
+      <span>⛶</span>
+      <span class="hidden sm:inline">На весь екран</span>
+    </button>
+  </header>
+
+  <!-- ================= SLIDES CONTAINER ================= -->
+  <main class="relative w-full h-full z-20 flex items-center justify-center p-3 sm:p-8 pt-16 sm:pt-20 pb-20 sm:pb-24">
+
+    <!-- SLIDE 1: ТИТУЛ -->
+    <section class="slide active" data-index="0">
+      <div class="glass-box rounded-3xl p-6 sm:p-12 max-w-4xl w-full text-center relative overflow-hidden">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-400/15 border border-teal-300/40 text-teal-200 text-xs sm:text-sm font-bold mb-6 uppercase tracking-wider">
+          <span>🌊</span> Жива презентація
+        </div>
+
+        <h1 class="font-unbounded font-black text-3xl sm:text-5xl md:text-6xl text-white tracking-tight leading-tight mb-5">
+          Водорості:<br>
+          <span class="bg-gradient-to-r from-teal-300 via-cyan-200 to-sky-300 bg-clip-text text-transparent">Володарі Океану</span>
+        </h1>
+
+        <p class="text-teal-100 text-sm sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
+          У них немає коріння, стовбура чи листя, проте вони виробляють понад половину всього кисню на Землі та будують велетенські підводні ліси.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          <button onclick="nextSlide()" class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-teal-400 to-cyan-400 text-slate-950 font-unbounded font-bold text-xs sm:text-sm hover:shadow-[0_0_30px_rgba(45,212,191,0.5)] hover:scale-105 transition-all">
+            Почати занурення ➔
+          </button>
+          <span class="text-xs text-teal-200/80 hidden sm:inline">або тисни клавішу <strong>ПРОБІЛ</strong> / ➔</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: ПЕРША СУПЕРСИЛА (КИСЕНЬ) -->
+    <section class="slide" data-index="1">
+      <div class="glass-box rounded-3xl p-6 sm:p-10 max-w-4xl w-full">
+        <div class="text-xs text-teal-300 font-bold uppercase tracking-wider mb-2">Слайд 02 • Легені Планети</div>
+        <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white mb-6">
+          Кожен другий твій вдих — це їхня робота
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="glass-card p-5 rounded-2xl border-l-4 border-l-teal-300">
+            <div class="text-3xl mb-2">🫁</div>
+            <div class="font-unbounded font-bold text-2xl text-teal-300 mb-1">50-70%</div>
+            <div class="text-xs text-teal-100 leading-relaxed">Кисню на Землі виробляють морські водорості та фітопланктон, а не лише ліси Амазонки!</div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl border-l-4 border-l-cyan-300">
+            <div class="text-3xl mb-2">⏳</div>
+            <div class="font-unbounded font-bold text-2xl text-cyan-300 mb-1">1.5+ млрд</div>
+            <div class="text-xs text-cyan-100 leading-relaxed">Років тому вони першими наситили первісну атмосферу Землі життєдайним киснем.</div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl border-l-4 border-l-emerald-300">
+            <div class="text-3xl mb-2">🛡️</div>
+            <div class="font-unbounded font-bold text-2xl text-emerald-300 mb-1">Фільтр CO₂</div>
+            <div class="text-xs text-emerald-100 leading-relaxed">Поглинають вуглекислий газ у кілька разів швидше за звичайні дерева на суходолі.</div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-teal-950/50 border border-teal-300/30 text-xs sm:text-sm text-teal-100 flex items-center gap-3">
+          <span class="text-2xl">💡</span>
+          <span><strong>Висновок для доповіді:</strong> Без водоростей життя на суші взагалі не змогло б виникнути.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: БУДОВА БЕЗ ОРГАНІВ -->
+    <section class="slide" data-index="2">
+      <div class="glass-box rounded-3xl p-6 sm:p-10 max-w-4xl w-full">
+        <div class="text-xs text-teal-300 font-bold uppercase tracking-wider mb-2">Слайд 03 • Анатомія Без Органів</div>
+        <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white mb-4">
+          Як влаштоване тіло водорості?
+        </h2>
+        <p class="text-teal-100 text-xs sm:text-sm mb-6">
+          У них немає коріння, стебла чи справжнього листя. Їхнє тіло називається <strong class="text-teal-300">СЛАНЬ (або талом)</strong>.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="glass-card p-5 rounded-2xl text-center">
+            <div class="w-12 h-12 rounded-2xl bg-teal-400/20 text-teal-300 flex items-center justify-center font-bold text-xl mx-auto mb-3">1</div>
+            <h3 class="font-unbounded font-bold text-base text-white mb-2">Пластина</h3>
+            <p class="text-xs text-teal-100/90 leading-relaxed">
+              Схожа на лист, але проводить фотосинтез кожною клітинкою. Поглинає сонячні промені та воду всією площею.
+            </p>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl text-center">
+            <div class="w-12 h-12 rounded-2xl bg-cyan-400/20 text-cyan-300 flex items-center justify-center font-bold text-xl mx-auto mb-3">2</div>
+            <h3 class="font-unbounded font-bold text-base text-white mb-2">Стовбурець</h3>
+            <p class="text-xs text-teal-100/90 leading-relaxed">
+              Пружний та гнучкий. Він легко гнеться під ударами штормових хвиль і не ламається у водному потоці.
+            </p>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl text-center">
+            <div class="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-300 flex items-center justify-center font-bold text-xl mx-auto mb-3">3</div>
+            <h3 class="font-unbounded font-bold text-base text-white mb-2">Ризоїди</h3>
+            <p class="text-xs text-teal-100/90 leading-relaxed">
+              «Якірні» вирости. Вони <strong>НЕ п'ють воду</strong>, а лише міцно чіпляються за підводне каміння або скелі.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: ТРИ РОДИНИ (ЗЕЛЕНІ, БУРІ, ЧЕРВОНІ) -->
+    <section class="slide" data-index="3">
+      <div class="glass-box rounded-3xl p-6 sm:p-10 max-w-4xl w-full">
+        <div class="text-xs text-teal-300 font-bold uppercase tracking-wider mb-2">Слайд 04 • Три Кольорові Родини</div>
+        <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white mb-6">
+          Чому вони різного кольору?
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Зелені -->
+          <div class="glass-card p-5 rounded-2xl border-t-4 border-t-emerald-400">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-unbounded font-bold text-emerald-300 text-lg">Зелені</span>
+              <span class="text-xl">🌿</span>
+            </div>
+            <div class="text-[11px] text-emerald-200/80 mb-3">Глибина: 0 – 20 метрів</div>
+            <p class="text-xs text-slate-100 leading-relaxed mb-3">
+              Люблять яскраве сонце біля поверхні. Працює зелений пігмент <strong>хлорофіл</strong>.
+            </p>
+            <div class="text-[11px] bg-emerald-950/60 p-2.5 rounded-xl text-emerald-200">
+              <strong>Приклади:</strong> Ульва (морський салат), Спірогіра, Хлорела.
+            </div>
+          </div>
+
+          <!-- Бурі -->
+          <div class="glass-card p-5 rounded-2xl border-t-4 border-t-amber-400">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-unbounded font-bold text-amber-300 text-lg">Бурі</span>
+              <span class="text-xl">🪵</span>
+            </div>
+            <div class="text-[11px] text-amber-200/80 mb-3">Глибина: 10 – 40 метрів</div>
+            <p class="text-xs text-slate-100 leading-relaxed mb-3">
+              Мають пігмент <strong>фукоксантин</strong>. Тільки багатоклітинні велетні, будують підводні хащі.
+            </p>
+            <div class="text-[11px] bg-amber-950/60 p-2.5 rounded-xl text-amber-200">
+              <strong>Приклади:</strong> Ламінарія (морська капуста), велетенський Макроцистіс (до 60 м).
+            </div>
+          </div>
+
+          <!-- Червоні -->
+          <div class="glass-card p-5 rounded-2xl border-t-4 border-t-rose-400">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-unbounded font-bold text-rose-300 text-lg">Червоні</span>
+              <span class="text-xl">🏮</span>
+            </div>
+            <div class="text-[11px] text-rose-200/80 mb-3">Глибина: до 200+ метрів</div>
+            <p class="text-xs text-slate-100 leading-relaxed mb-3">
+              Пігмент <strong>фікоеритрин</strong> вловлює залишки синього світла у сутінках безодні.
+            </p>
+            <div class="text-[11px] bg-rose-950/60 p-2.5 rounded-xl text-rose-200">
+              <strong>Приклади:</strong> Порфіра (листи для суші норі), червоний корал, філофора.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: ШКАЛА ГЛИБИН -->
+    <section class="slide" data-index="4">
+      <div class="glass-box rounded-3xl p-6 sm:p-10 max-w-4xl w-full">
+        <div class="text-xs text-teal-300 font-bold uppercase tracking-wider mb-2">Слайд 05 • Фізика Світла</div>
+        <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white mb-6">
+          Хто живе глибше за всіх?
+        </h2>
+
+        <div class="space-y-3.5">
+          <!-- 0m -->
+          <div class="glass-card p-4 rounded-2xl flex items-center justify-between border-l-4 border-l-emerald-400">
+            <div class="flex items-center gap-3">
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-400/20 text-emerald-300 font-bold text-xs">0 - 20 м</span>
+              <span class="text-xs sm:text-sm font-semibold text-white">Зелені водорості</span>
+            </div>
+            <span class="text-xs text-teal-200/90 text-right">Повне сонячне світло (червоні + сині промені)</span>
+          </div>
+
+          <!-- 30m -->
+          <div class="glass-card p-4 rounded-2xl flex items-center justify-between border-l-4 border-l-amber-400">
+            <div class="flex items-center gap-3">
+              <span class="px-2.5 py-1 rounded-lg bg-amber-400/20 text-amber-300 font-bold text-xs">20 - 40 м</span>
+              <span class="text-xs sm:text-sm font-semibold text-white">Бурі водорості</span>
+            </div>
+            <span class="text-xs text-teal-200/90 text-right">Червоне світло вже згасло, ловлять зелено-жовте</span>
+          </div>
+
+          <!-- 100m+ -->
+          <div class="glass-card p-4 rounded-2xl flex items-center justify-between border-l-4 border-l-rose-400">
+            <div class="flex items-center gap-3">
+              <span class="px-2.5 py-1 rounded-lg bg-rose-400/20 text-rose-300 font-bold text-xs">до 200+ м</span>
+              <span class="text-xs sm:text-sm font-semibold text-white">Червоні водорості (Багрянки)</span>
+            </div>
+            <span class="text-xs text-teal-200/90 text-right">Тільки коротке синє світло пробиває таку глибину</span>
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 rounded-2xl bg-teal-950/60 border border-teal-300/30 text-xs sm:text-sm text-teal-100 text-center">
+          🌊 <strong>Закон глибини:</strong> Чим глибше занурюєшся, тим темнішою і червонішою стає водорость!
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: МИ ЇХ ЇМО ЩОДНЯ -->
+    <section class="slide" data-index="5">
+      <div class="glass-box rounded-3xl p-6 sm:p-10 max-w-4xl w-full">
+        <div class="text-xs text-teal-300 font-bold uppercase tracking-wider mb-2">Слайд 06 • У Твоєму Житті</div>
+        <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white mb-6">
+          Де водорості ховаються прямо зараз?
+        </h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+          <div class="glass-card p-4 sm:p-5 rounded-2xl text-center">
+            <div class="text-4xl mb-2">🍦</div>
+            <h4 class="font-unbounded font-bold text-xs sm:text-sm text-white mb-1">Морозиво</h4>
+            <p class="text-[11px] text-teal-100/80 leading-relaxed">Альгінати з бурих водоростей роблять пломбір ніжним і не дають замерзнути кристалам льоду.</p>
+          </div>
+
+          <div class="glass-card p-4 sm:p-5 rounded-2xl text-center">
+            <div class="text-4xl mb-2">🍮</div>
+            <h4 class="font-unbounded font-bold text-xs sm:text-sm text-white mb-1">Мармелад</h4>
+            <p class="text-[11px] text-teal-100/80 leading-relaxed">Агар-агар з червоних багрянок — це найкращий рослинний замінник желатину.</p>
+          </div>
+
+          <div class="glass-card p-4 sm:p-5 rounded-2xl text-center">
+            <div class="text-4xl mb-2">🍣</div>
+            <h4 class="font-unbounded font-bold text-xs sm:text-sm text-white mb-1">Суші (Норі)</h4>
+            <p class="text-[11px] text-teal-100/80 leading-relaxed">Чорні хрусткі листи норі — це висушена червона водорость Порфіра.</p>
+          </div>
+
+          <div class="glass-card p-4 sm:p-5 rounded-2xl text-center">
+            <div class="text-4xl mb-2">🪥</div>
+            <h4 class="font-unbounded font-bold text-xs sm:text-sm text-white mb-1">Зубна паста</h4>
+            <p class="text-[11px] text-teal-100/80 leading-relaxed">Екстракти водоростей створюють ідеальну густу структуру в пастах та кремах.</p>
+          </div>
+        </div>
+
+        <div class="text-center text-xs text-teal-200">
+          🌱 Додатково: багаті на органічний йод, який потрібен для роботи мозку та щитоподібної залози.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: ШВИДКИЙ БЛІЦ-КВІЗ -->
+    <section class="slide" data-index="6">
+      <div class="glass-box rounded-3xl p-6 sm:p-10 max-w-3xl w-full text-center">
+        <div class="text-xs text-teal-300 font-bold uppercase tracking-wider mb-2">Слайд 07 • Інтерактив для класу</div>
+        <h2 class="font-unbounded font-bold text-2xl sm:text-3xl text-white mb-4">
+          Швидке запитання для слухачів
+        </h2>
+
+        <div class="p-6 rounded-2xl bg-slate-900/40 border border-white/10 mb-6 text-left">
+          <div class="font-unbounded font-semibold text-base sm:text-lg text-white mb-4">
+            Яку функцію насправді виконують ризоїди у морської ламінарії?
+          </div>
+
+          <div class="space-y-3" id="quiz-slide-options">
+            <button onclick="checkSlideQuiz(this, false)" class="w-full text-left p-3.5 rounded-xl glass-card text-xs sm:text-sm text-white hover:border-teal-300 transition flex items-center justify-between">
+              <span>А) Всмоктують поживні речовини та воду з ґрунту</span>
+              <span class="status-icon text-lg">⚪</span>
+            </button>
+            <button onclick="checkSlideQuiz(this, true)" class="w-full text-left p-3.5 rounded-xl glass-card text-xs sm:text-sm text-white hover:border-teal-300 transition flex items-center justify-between">
+              <span>Б) Лише міцно прикріплюють тіло водорості до каміння</span>
+              <span class="status-icon text-lg">⚪</span>
+            </button>
+            <button onclick="checkSlideQuiz(this, false)" class="w-full text-left p-3.5 rounded-xl glass-card text-xs sm:text-sm text-white hover:border-teal-300 transition flex items-center justify-between">
+              <span>В) Захищають рослину від морських їжаків</span>
+              <span class="status-icon text-lg">⚪</span>
+            </button>
+          </div>
+
+          <div id="slide-quiz-feedback" class="hidden mt-4 p-3 rounded-xl text-xs sm:text-sm font-semibold"></div>
+        </div>
+
+        <button onclick="nextSlide()" class="px-6 py-2.5 rounded-xl bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs sm:text-sm transition">
+          Фінальний підсумок ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: ФІНАЛ -->
+    <section class="slide" data-index="7">
+      <div class="glass-box rounded-3xl p-6 sm:p-12 max-w-3xl w-full text-center relative overflow-hidden">
+        <div class="text-5xl mb-4 floating-anim">🌊</div>
+
+        <h2 class="font-unbounded font-black text-3xl sm:text-5xl text-white mb-4 tracking-tight">
+          Дякую за увагу!
+        </h2>
+
+        <p class="text-teal-100 text-sm sm:text-base max-w-xl mx-auto leading-relaxed mb-8">
+          Тепер ви знаєте, що найпростіші жителі океану без квіток і листя — насправді головні рятівники клімату нашої планети.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <button onclick="goToSlide(0)" class="px-6 py-3 rounded-xl glass-card hover:border-teal-300 text-teal-200 text-xs sm:text-sm font-bold transition">
+            ↺ Спочатку
+          </button>
+          <a href="./#quiz" class="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-400 text-slate-950 font-bold text-xs sm:text-sm hover:scale-105 transition shadow-lg">
+            Пройти Бліц-Тест в Атласі ➔
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= BOTTOM NAVIGATION BAR ================= -->
+  <footer class="fixed bottom-0 left-0 right-0 z-40 px-4 sm:px-8 py-3 sm:py-4 flex items-center justify-between pointer-events-auto">
+    <div class="text-xs text-teal-200/80 font-mono hidden sm:block">
+      <span id="current-slide-num">01</span> / 08
+    </div>
+
+    <div class="flex items-center gap-3 mx-auto sm:mx-0">
+      <button onclick="prevSlide()" class="px-4 sm:px-5 py-2.5 rounded-2xl glass-card hover:border-teal-300 text-teal-200 hover:text-white font-bold text-xs sm:text-sm transition flex items-center gap-2">
+        <span>←</span>
+        <span>Назад</span>
+      </button>
+
+      <button onclick="nextSlide()" class="px-5 sm:px-6 py-2.5 rounded-2xl bg-teal-400 hover:bg-teal-300 text-slate-950 font-unbounded font-bold text-xs sm:text-sm transition flex items-center gap-2 shadow-lg">
+        <span>Вперед</span>
+        <span>→</span>
+      </button>
+    </div>
+
+    <div class="text-xs text-teal-300/80 font-medium hidden sm:block">
+      Управління: ◄ ► або Пробіл
+    </div>
+  </footer>
+
+  <!-- ================= SCRIPT LOGIC ================= -->
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentSlide = 0;
+
+    // Generate Indicators
+    const indicatorsContainer = document.getElementById('indicators');
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('button');
+      dot.className = `w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full transition-all duration-300 ${i === 0 ? 'bg-teal-300 w-6 sm:w-7' : 'bg-white/30 hover:bg-white/60'}`;
+      dot.onclick = () => goToSlide(i);
+      dot.title = `Слайд ${i + 1}`;
+      indicatorsContainer.appendChild(dot);
+    }
+
+    function updateSlideView() {
+      slides.forEach((s, idx) => {
+        if (idx === currentSlide) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+
+      // Update dots
+      Array.from(indicatorsContainer.children).forEach((dot, idx) => {
+        if (idx === currentSlide) {
+          dot.className = 'w-6 sm:w-7 h-2 sm:h-2.5 rounded-full bg-teal-300 transition-all duration-300';
+        } else {
+          dot.className = 'w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-white/30 hover:bg-white/60 transition-all duration-300';
+        }
+      });
+
+      // Slide counter
+      const numStr = (currentSlide + 1).toString().padStart(2, '0');
+      document.getElementById('current-slide-num').textContent = numStr;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlideView();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlideView();
+      }
+    }
+
+    function goToSlide(idx) {
+      if (idx >= 0 && idx < totalSlides) {
+        currentSlide = idx;
+        updateSlideView();
+      }
+    }
+
+    // Keyboard support
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      }
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    window.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    window.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) nextSlide();
+      if (touchEndX - touchStartX > 50) prevSlide();
+    }, { passive: true });
+
+    // Fullscreen toggle
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+    document.getElementById('fullscreen-btn').onclick = toggleFullscreen;
+
+    // Slide quiz check
+    function checkSlideQuiz(btn, isCorrect) {
+      const parent = document.getElementById('quiz-slide-options');
+      const feedback = document.getElementById('slide-quiz-feedback');
+      Array.from(parent.children).forEach(b => {
+        b.disabled = true;
+        b.classList.remove('hover:border-teal-300');
+      });
+
+      if (isCorrect) {
+        btn.classList.add('bg-emerald-900/60', 'border-emerald-400');
+        btn.querySelector('.status-icon').textContent = '✅';
+        feedback.className = 'mt-4 p-3 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-950/70 border border-emerald-400/50 text-emerald-200 block';
+        feedback.textContent = '🎉 Точно! Ризоїди потрібні тільки щоб триматися за скелю і не зноситися хвилями.';
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+      } else {
+        btn.classList.add('bg-rose-900/60', 'border-rose-400');
+        btn.querySelector('.status-icon').textContent = '❌';
+        feedback.className = 'mt-4 p-3 rounded-xl text-xs sm:text-sm font-semibold bg-rose-950/70 border border-rose-400/50 text-rose-200 block';
+        feedback.textContent = 'Ні, це міф! Водорості вбирають воду всією площею, а ризоїди — це суто «якір».';
+      }
+    }
+
+    // Bubbles Animation
+    const canvas = document.getElementById('bubbles-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const bubbles = Array.from({ length: 30 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 4 + 2,
+      speed: Math.random() * 0.8 + 0.3,
+      drift: (Math.random() - 0.5) * 0.4,
+      alpha: Math.random() * 0.4 + 0.2
+    }));
+
+    function drawBubbles() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'rgba(94, 234, 212, 0.4)';
+
+      bubbles.forEach(b => {
+        b.y -= b.speed;
+        b.x += b.drift;
+        if (b.y < -10) {
+          b.y = height + 10;
+          b.x = Math.random() * width;
+        }
+
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(153, 246, 228, ${b.alpha})`;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(drawBubbles);
+    }
+    drawBubbles();
+  </script>
+</body>
+</html>
