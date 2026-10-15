@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Світ Водоростей — Таємниці Океану</title>
+  <title>Світ Водоростей — Інтерактивний Атлас Океану</title>
   
   <!-- Modern Ukrainian-supported fonts: Unbounded & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,20 +19,6 @@
           fontFamily: {
             unbounded: ['Unbounded', 'sans-serif'],
             sans: ['Plus Jakarta Sans', 'sans-serif'],
-          },
-          colors: {
-            aqua: {
-              50: '#f0fdfa',
-              100: '#ccfbf1',
-              200: '#99f6e4',
-              300: '#5eead4',
-              400: '#2dd4bf',
-              500: '#14b8a6',
-              600: '#0d9488',
-              700: '#0f766e',
-              800: '#115e59',
-              900: '#134e4a',
-            }
           }
         }
       }
@@ -45,13 +31,11 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* Luminous Ocean Gradient */
     body {
-      background: linear-gradient(135deg, #093554 0%, #0c4a6e 25%, #075985 50%, #0369a1 75%, #0f766e 100%);
+      background: linear-gradient(135deg, #093352 0%, #0c4a6e 25%, #075985 50%, #0369a1 75%, #0f766e 100%);
       background-attachment: fixed;
     }
 
-    /* Crystal Clear Glassmorphism */
     .glass-card {
       background: rgba(14, 63, 98, 0.42);
       backdrop-filter: blur(20px);
@@ -60,21 +44,26 @@
       box-shadow: 0 16px 40px -10px rgba(4, 28, 48, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
     }
     .glass-card:hover {
-      border-color: rgba(94, 234, 212, 0.5);
+      border-color: rgba(94, 234, 212, 0.55);
       transform: translateY(-3px);
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .glass-nav {
-      background: rgba(9, 53, 84, 0.65);
+      background: rgba(9, 53, 84, 0.7);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.18);
     }
 
-    /* Water Caustics / Sunlight Ripples */
     .water-light {
-      background: radial-gradient(ellipse at 50% 0%, rgba(153, 246, 228, 0.28) 0%, rgba(56, 189, 248, 0.15) 35%, transparent 70%);
+      background: radial-gradient(ellipse at 50% 0%, rgba(153, 246, 228, 0.3) 0%, rgba(56, 189, 248, 0.16) 35%, transparent 70%);
+    }
+
+    /* Circular Microscope Lens view */
+    .micro-lens {
+      background: radial-gradient(circle at 35% 35%, rgba(45, 212, 191, 0.2) 0%, rgba(7, 43, 70, 0.85) 75%);
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(45, 212, 191, 0.25);
     }
   </style>
 </head>
@@ -82,9 +71,9 @@
 <body class="text-white min-h-screen relative overflow-x-hidden selection:bg-teal-300 selection:text-slate-900 font-sans">
 
   <!-- ================= LIVING WATER CANVAS (Bubbles) ================= -->
-  <canvas id="bubbles-canvas" class="fixed inset-0 pointer-events-auto z-0 opacity-80" title="Клікай, щоб лускати бульбашки"></canvas>
+  <canvas id="bubbles-canvas" class="fixed inset-0 pointer-events-auto z-0 opacity-80" title="Клікай по бульбашках"></canvas>
 
-  <!-- ================= SUNLIGHT RAYS & WATER HIGHLIGHTS ================= -->
+  <!-- ================= AMBIENT OCEAN LIGHT ================= -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
     <div class="water-light absolute inset-0"></div>
     <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[70vw] h-[350px] bg-teal-400/15 rounded-full blur-[130px]"></div>
@@ -93,13 +82,13 @@
 
   <!-- ================= FLOATING BUBBLE COUNTER ================= -->
   <div class="fixed bottom-5 right-5 z-40 flex items-center gap-2 pointer-events-auto">
-    <div class="glass-card px-3.5 py-1.5 rounded-full text-xs font-bold text-teal-200 flex items-center gap-2 shadow-xl border border-teal-300/30 select-none cursor-pointer">
+    <div class="glass-card px-3.5 py-1.5 rounded-full text-xs font-bold text-teal-200 flex items-center gap-2 shadow-xl border border-teal-300/30 select-none cursor-pointer" title="Спіймані бульбашки">
       <span>🫧</span>
       <span>Спіймано: <strong id="bubble-count" class="text-white font-mono text-sm">0</strong></span>
     </div>
   </div>
 
-  <!-- ================= ELEGANT MINIMAL HEADER ================= -->
+  <!-- ================= HEADER ================= -->
   <header class="fixed top-0 left-0 right-0 z-50 glass-nav">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
       
@@ -114,19 +103,25 @@
         </div>
       </a>
 
-      <!-- Clean Navigation -->
-      <nav class="flex items-center gap-2 sm:gap-4">
-        <a href="#groups" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-teal-100 hover:text-white hover:bg-white/10 transition">
-          Групи
+      <!-- Navigation -->
+      <nav class="flex items-center gap-1.5 sm:gap-3 text-xs sm:text-sm font-semibold">
+        <a href="#microscope" class="px-3 py-1.5 rounded-lg text-teal-100 hover:text-white hover:bg-white/10 transition hidden md:inline-block">
+          Мікроскоп
         </a>
-        <a href="#facts" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-teal-100 hover:text-white hover:bg-white/10 transition">
-          Факти
+        <a href="#groups" class="px-3 py-1.5 rounded-lg text-teal-100 hover:text-white hover:bg-white/10 transition">
+          3 Групи
         </a>
-        <a href="#quiz" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-teal-400 hover:bg-teal-300 text-slate-950 shadow-md transition flex items-center gap-1.5">
-          <span>Бліц-тест</span>
+        <a href="#depth" class="px-3 py-1.5 rounded-lg text-teal-100 hover:text-white hover:bg-white/10 transition hidden sm:inline-block">
+          Глибина
+        </a>
+        <a href="#daily" class="px-3 py-1.5 rounded-lg text-teal-100 hover:text-white hover:bg-white/10 transition hidden lg:inline-block">
+          У житті
+        </a>
+        <a href="#quiz" class="px-3.5 py-1.5 rounded-xl font-bold bg-teal-400 hover:bg-teal-300 text-slate-950 shadow-md transition">
+          Бліц-тест
         </a>
 
-        <!-- Sound Toggle -->
+        <!-- Sound -->
         <button id="sound-btn" class="w-9 h-9 rounded-lg glass-card flex items-center justify-center text-teal-200 hover:text-white transition ml-1" title="Звук">
           <i data-lucide="volume-2" id="sound-on" class="w-4 h-4"></i>
           <i data-lucide="volume-x" id="sound-off" class="w-4 h-4 hidden text-slate-400"></i>
@@ -136,10 +131,10 @@
     </div>
   </header>
 
-  <main class="relative z-10 pt-24 sm:pt-32">
+  <main class="relative z-10 pt-24 sm:pt-32 space-y-20">
 
-    <!-- ================= HERO ================= -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-14 text-center">
+    <!-- ================= BLOCK 1: HERO ================= -->
+    <section class="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-10 text-center">
       
       <h1 class="font-unbounded font-black text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight mb-4 leading-tight">
         Найдавніші володарі води, <br class="hidden sm:inline" />
@@ -152,9 +147,8 @@
         У них немає листя, коренів чи квіток — їхнє тіло це єдина слань. Проте без них життя на нашій планеті було б неможливим.
       </p>
 
-      <!-- 4 Crystal Highlight Tiles -->
+      <!-- 4 Quick Stats -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 max-w-4xl mx-auto">
-        
         <div class="glass-card p-4 sm:p-5 rounded-2xl text-center">
           <div class="font-unbounded text-2xl sm:text-4xl font-bold text-teal-300 mb-1">~70%</div>
           <div class="font-semibold text-xs sm:text-sm text-white">Кисню планети</div>
@@ -178,21 +172,149 @@
           <div class="font-semibold text-xs sm:text-sm text-white">Глибина багрянок</div>
           <div class="text-[11px] text-cyan-200/80 mt-0.5">ростуть у сутінках моря</div>
         </div>
+      </div>
+
+    </section>
+
+
+    <!-- ================= BLOCK 2: INTERACTIVE MICROSCOPE (NEW!) ================= -->
+    <section id="microscope" class="max-w-5xl mx-auto px-4 sm:px-6">
+      
+      <div class="text-center mb-8">
+        <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white tracking-tight">
+          Під мікроскопом
+        </h2>
+        <p class="text-teal-200 text-xs sm:text-sm mt-1">
+          Оберіть зразок, щоб побачити його внутрішню будову
+        </p>
+      </div>
+
+      <div class="glass-card rounded-3xl p-6 sm:p-10 border-teal-300/30">
+        
+        <!-- Specimen selector tabs -->
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8" id="micro-tabs">
+          <button data-specimen="chlamy" class="micro-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-teal-300 text-slate-950 shadow-md transition">
+            🔬 Хламідомонада
+          </button>
+          <button data-specimen="spiro" class="micro-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white/10 hover:bg-white/20 text-white transition">
+            🧬 Спірогіра
+          </button>
+          <button data-specimen="diatom" class="micro-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white/10 hover:bg-white/20 text-white transition">
+            💎 Діатомея (Кришталевий панцир)
+          </button>
+        </div>
+
+        <!-- Microscope Viewer Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          
+          <!-- Visual Circle Lens -->
+          <div class="md:col-span-6 flex justify-center">
+            <div class="w-64 h-64 sm:w-80 sm:h-80 rounded-full micro-lens border-4 border-teal-300/40 relative flex items-center justify-center overflow-hidden shadow-2xl">
+              
+              <!-- Crosshair Grid lines of microscope -->
+              <div class="absolute inset-x-0 top-1/2 h-px bg-teal-300/20"></div>
+              <div class="absolute inset-y-0 left-1/2 w-px bg-teal-300/20"></div>
+              
+              <!-- Specimen Graphic Animation Container -->
+              <div id="micro-graphic" class="relative z-10 transition-all duration-500 scale-100 flex items-center justify-center">
+                <!-- SVG / Graphic inserted by JS -->
+              </div>
+
+              <!-- Zoom Badge -->
+              <div class="absolute bottom-4 text-[10px] font-mono uppercase tracking-widest text-teal-300/80 bg-slate-950/70 px-2.5 py-1 rounded-full border border-teal-300/20">
+                Збільшення: <span id="micro-zoom">400x</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Specimen Detail Card -->
+          <div class="md:col-span-6 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-400/20 text-teal-200 text-xs font-bold" id="specimen-badge">
+              Одноклітинна зелена водорость
+            </div>
+            
+            <h3 class="font-unbounded font-bold text-2xl text-white" id="specimen-name">
+              Хламідомонада
+            </h3>
+
+            <p class="text-xs sm:text-sm text-cyan-100/90 leading-relaxed" id="specimen-desc">
+              Рухлива краплеподібна клітина, яка активно пливе туди, де є сонячні промені.
+            </p>
+
+            <div class="space-y-2 pt-2 text-xs sm:text-sm" id="specimen-parts">
+              <!-- Feature pills -->
+            </div>
+          </div>
+
+        </div>
 
       </div>
 
     </section>
 
 
-    <!-- ================= 3 MAIN GROUPS ================= -->
-    <section id="groups" class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+    <!-- ================= BLOCK 3: DEPTH SCALE (NEW!) ================= -->
+    <section id="depth" class="max-w-5xl mx-auto px-4 sm:px-6">
+      
+      <div class="text-center mb-8">
+        <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white tracking-tight">
+          Шкала глибин: хто де живе?
+        </h2>
+        <p class="text-teal-200 text-xs sm:text-sm mt-1">
+          Натискайте на глибину, щоб побачити занурення
+        </p>
+      </div>
+
+      <div class="glass-card rounded-3xl p-6 sm:p-8">
+        
+        <!-- Depth Stepper Buttons -->
+        <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-8">
+          <button data-depth="0" class="depth-btn p-3 sm:p-4 rounded-2xl bg-emerald-400/30 border border-emerald-300/50 text-center transition">
+            <span class="block text-base sm:text-xl font-bold font-unbounded text-emerald-200">0 – 25 м</span>
+            <span class="text-[11px] text-emerald-100">Зелена зона</span>
+          </button>
+
+          <button data-depth="1" class="depth-btn p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-amber-300/40 text-center transition">
+            <span class="block text-base sm:text-xl font-bold font-unbounded text-amber-200">до 100 м</span>
+            <span class="text-[11px] text-amber-100">Бурі ліси</span>
+          </button>
+
+          <button data-depth="2" class="depth-btn p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-rose-300/40 text-center transition">
+            <span class="block text-base sm:text-xl font-bold font-unbounded text-rose-200">до 200+ м</span>
+            <span class="text-[11px] text-rose-100">Червоні багрянки</span>
+          </button>
+        </div>
+
+        <!-- Dynamic Depth Showcase Banner -->
+        <div id="depth-banner" class="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-emerald-900/60 to-teal-900/40 border border-emerald-300/30 transition-all duration-500">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="space-y-2 text-center sm:text-left">
+              <span class="text-xs uppercase font-bold tracking-wider text-emerald-300" id="depth-zone-title">Сонячний басейн океану</span>
+              <h3 class="font-unbounded font-black text-2xl sm:text-3xl text-white" id="depth-title">Царство Зелених Водоростей</h3>
+              <p class="text-xs sm:text-sm text-cyan-100/90 max-w-xl" id="depth-info">
+                Сюди проникає весь сонячний спектр. Зелений пігмент хлорофіл поглинає червоні й сині промені для активного фотосинтезу.
+              </p>
+            </div>
+            <div class="text-6xl sm:text-7xl shrink-0" id="depth-icon">
+              🌱
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= BLOCK 4: 3 MAIN GROUPS ================= -->
+    <section id="groups" class="max-w-5xl mx-auto px-4 sm:px-6">
       
       <div class="text-center mb-8">
         <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white tracking-tight">
           Три родини водоростей
         </h2>
         <p class="text-teal-200 text-xs sm:text-sm mt-1">
-          Колір залежить від глибини та сонячних променів
+          Порівняльна характеристика
         </p>
       </div>
 
@@ -214,15 +336,15 @@
             <ul class="space-y-2.5 text-xs sm:text-sm text-cyan-50">
               <li class="flex items-start gap-2">
                 <span class="text-emerald-300 font-bold">•</span>
-                <span><strong>Хламідомонада:</strong> має світлочутливе червоне вічко (стигму) та джгутики.</span>
+                <span><strong>Хламідомонада:</strong> червоне вічко (стигма) та 2 джгутики.</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="text-emerald-300 font-bold">•</span>
-                <span><strong>Хлорела:</strong> 50% білка, використовувалась у космонавтиці.</span>
+                <span><strong>Хлорела:</strong> високий вміст білка, літала в космос.</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="text-emerald-300 font-bold">•</span>
-                <span><strong>Спірогіра:</strong> нитчаста зі спіральним хроматофором.</span>
+                <span><strong>Спірогіра:</strong> спіральний хроматофор у вигляді стрічки.</span>
               </li>
             </ul>
           </div>
@@ -247,15 +369,15 @@
             <ul class="space-y-2.5 text-xs sm:text-sm text-cyan-50">
               <li class="flex items-start gap-2">
                 <span class="text-amber-300 font-bold">•</span>
-                <span><strong>Тільки багатоклітинні:</strong> живуть виключно в морях.</span>
+                <span><strong>Виключно багатоклітинні:</strong> живуть тільки в морях.</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="text-amber-300 font-bold">•</span>
-                <span><strong>Ламінарія:</strong> знаменита «морська капуста», джерело йоду.</span>
+                <span><strong>Ламінарія:</strong> морська капуста, багата на йод.</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="text-amber-300 font-bold">•</span>
-                <span><strong>Макроцистіс:</strong> утворює справжні підводні ліси.</span>
+                <span><strong>Макроцистіс:</strong> до 60 метрів, підводні хащі.</span>
               </li>
             </ul>
           </div>
@@ -280,20 +402,20 @@
             <ul class="space-y-2.5 text-xs sm:text-sm text-cyan-50">
               <li class="flex items-start gap-2">
                 <span class="text-rose-300 font-bold">•</span>
-                <span><strong>Рекордсмени глибини:</strong> ростуть там, де майже немає світла.</span>
+                <span><strong>Рекордсмени глибини:</strong> вловлюють залишки синього світла.</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="text-rose-300 font-bold">•</span>
-                <span><strong>Агар-агар:</strong> основа для мармеладу, зефіру та лабораторій.</span>
+                <span><strong>Агар-агар:</strong> замінник желатину для мармеладу.</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="text-rose-300 font-bold">•</span>
-                <span><strong>Порфіра:</strong> водорость для суші (норі).</span>
+                <span><strong>Порфіра:</strong> листи норі для японських суші.</span>
               </li>
             </ul>
           </div>
           <div class="mt-5 pt-3 border-t border-white/10 text-[11px] text-rose-200 font-medium">
-            Рослинна альтернатива тваринному желатину
+            Джерело рослинного агар-агару
           </div>
         </div>
 
@@ -302,51 +424,42 @@
     </section>
 
 
-    <!-- ================= 6 SHARP FACTS ================= -->
-    <section id="facts" class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+    <!-- ================= BLOCK 5: EVERYDAY LIFE DETECTOR (NEW!) ================= -->
+    <section id="daily" class="max-w-5xl mx-auto px-4 sm:px-6">
       
       <div class="text-center mb-8">
         <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white tracking-tight">
-          Цікаві факти
+          Де ми їх зустрічаємо щодня?
         </h2>
+        <p class="text-teal-200 text-xs sm:text-sm mt-1">
+          Водорості поруч з нами значно частіше, ніж здається!
+        </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         
-        <div class="glass-card p-5 rounded-2xl">
-          <div class="text-2xl mb-2">💨</div>
-          <h4 class="font-bold text-base text-white mb-1">Головні легені планети</h4>
-          <p class="text-xs sm:text-sm text-cyan-100/85">Мікроскопічний планктон в океані утворює більшість кисню, яким дихає людина.</p>
+        <div class="glass-card p-5 rounded-2xl text-center">
+          <div class="text-3xl sm:text-4xl mb-2">🍦</div>
+          <h4 class="font-bold text-sm sm:text-base text-white">Морозиво</h4>
+          <p class="text-[11px] sm:text-xs text-cyan-100/80 mt-1">Альгінати з бурих водоростей роблять його ніжним і не дають кристалізуватися льоду.</p>
         </div>
 
-        <div class="glass-card p-5 rounded-2xl">
-          <div class="text-2xl mb-2">👁️</div>
-          <h4 class="font-bold text-base text-white mb-1">Око в одній клітині</h4>
-          <p class="text-xs sm:text-sm text-cyan-100/85">Хламідомонада визначає, де світло, за допомогою маленької червоної цятки — стигми.</p>
+        <div class="glass-card p-5 rounded-2xl text-center">
+          <div class="text-3xl sm:text-4xl mb-2">🍮</div>
+          <h4 class="font-bold text-sm sm:text-base text-white">Мармелад і зефір</h4>
+          <p class="text-[11px] sm:text-xs text-cyan-100/80 mt-1">Агар-агар з червоних водоростей створює пружну желейну структуру.</p>
         </div>
 
-        <div class="glass-card p-5 rounded-2xl">
-          <div class="text-2xl mb-2">🍮</div>
-          <h4 class="font-bold text-base text-white mb-1">Солодощі з водоростей</h4>
-          <p class="text-xs sm:text-sm text-cyan-100/85">Агар-агар з червоних водоростей робить пружним ваш улюблений фруктовий мармелад.</p>
+        <div class="glass-card p-5 rounded-2xl text-center">
+          <div class="text-3xl sm:text-4xl mb-2">🍣</div>
+          <h4 class="font-bold text-sm sm:text-base text-white">Суші та роли</h4>
+          <p class="text-[11px] sm:text-xs text-cyan-100/80 mt-1">Темні листи норі — це висушена та спресована червона водорость Порфіра.</p>
         </div>
 
-        <div class="glass-card p-5 rounded-2xl">
-          <div class="text-2xl mb-2">🩺</div>
-          <h4 class="font-bold text-base text-white mb-1">Океанічний йод</h4>
-          <p class="text-xs sm:text-sm text-cyan-100/85">Ламінарія вбирає йод з морської води, захищаючи пам'ять і здоров'я людини.</p>
-        </div>
-
-        <div class="glass-card p-5 rounded-2xl">
-          <div class="text-2xl mb-2">✨</div>
-          <h4 class="font-bold text-base text-white mb-1">Нічне сяйво хвиль</h4>
-          <p class="text-xs sm:text-sm text-cyan-100/85">Водорость ночесвітка світиться яскравим блакитним світлом при кожному русі води.</p>
-        </div>
-
-        <div class="glass-card p-5 rounded-2xl">
-          <div class="text-2xl mb-2">🚀</div>
-          <h4 class="font-bold text-base text-white mb-1">Космічна хлорела</h4>
-          <p class="text-xs sm:text-sm text-cyan-100/85">Через високий вміст білка та швидкий поділ хлорелу досліджують для космічних станцій.</p>
+        <div class="glass-card p-5 rounded-2xl text-center">
+          <div class="text-3xl sm:text-4xl mb-2">🪥</div>
+          <h4 class="font-bold text-sm sm:text-base text-white">Зубна паста</h4>
+          <p class="text-[11px] sm:text-xs text-cyan-100/80 mt-1">Екстракти водоростей додають для однорідної густоти пасти та кремів.</p>
         </div>
 
       </div>
@@ -354,14 +467,63 @@
     </section>
 
 
-    <!-- ================= SIMPLE & NATURAL QUIZ ================= -->
-    <section id="quiz" class="max-w-2xl mx-auto px-4 sm:px-6 py-14">
+    <!-- ================= BLOCK 6: MYTH BUSTERS (NEW!) ================= -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6">
+      
+      <div class="text-center mb-8">
+        <h2 class="font-unbounded font-bold text-2xl sm:text-4xl text-white tracking-tight">
+          Міф чи Правда?
+        </h2>
+        <p class="text-teal-200 text-xs sm:text-sm mt-1">
+          Натискайте на картку, щоб дізнатися наукову відповідь
+        </p>
+      </div>
+
+      <div class="space-y-3.5">
+        
+        <div class="myth-card glass-card p-5 rounded-2xl cursor-pointer transition select-none">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sm sm:text-base text-white">❓ «Водорості — це просто морська трава з корінням»</span>
+            <span class="myth-icon text-teal-300 font-bold text-xl">＋</span>
+          </div>
+          <div class="myth-answer hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-cyan-100">
+            ❌ <strong>Це міф!</strong> У водоростей зовсім немає коренів, стебел чи квіток. Їхнє тіло — це слань, а прикріплюються вони ниткоподібними ризоїдами, вбираючи воду всією поверхнею!
+          </div>
+        </div>
+
+        <div class="myth-card glass-card p-5 rounded-2xl cursor-pointer transition select-none">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sm sm:text-base text-white">❓ «Водорості бувають тільки зеленого кольору»</span>
+            <span class="myth-icon text-teal-300 font-bold text-xl">＋</span>
+          </div>
+          <div class="myth-answer hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-cyan-100">
+            ❌ <strong>Це міф!</strong> Вони бувають смарагдово-зеленими, золотистими, шоколадно-бурими та яскраво-червоними залежно від додаткових пігментів, якими вони вловлюють світло.
+          </div>
+        </div>
+
+        <div class="myth-card glass-card p-5 rounded-2xl cursor-pointer transition select-none">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sm sm:text-base text-white">❓ «Водорості можуть жити на суходолі і навіть на снігу»</span>
+            <span class="myth-icon text-teal-300 font-bold text-xl">＋</span>
+          </div>
+          <div class="myth-answer hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-cyan-100">
+            ✅ <strong>Це правда!</strong> Одноклітинні водорості ростуть на вологій корі дерев, парканах і навіть високо в горах на льодовиках (хламідомонада нівальна забарвлює гірський сніг у рожевий колір із запахом кавуна!).
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= BLOCK 7: BLITZ QUIZ ================= -->
+    <section id="quiz" class="max-w-2xl mx-auto px-4 sm:px-6">
       
       <div class="text-center mb-6">
         <h2 class="font-unbounded font-bold text-2xl sm:text-3xl text-white tracking-tight">
           Бліц: 5 запитань
         </h2>
-        <p class="text-teal-200 text-xs sm:text-sm mt-1">Оберіть правильний варіант відповіді:</p>
+        <p class="text-teal-200 text-xs sm:text-sm mt-1">Оберіть правильну відповідь:</p>
       </div>
 
       <div class="glass-card rounded-3xl p-6 sm:p-8 relative" id="quiz-box">
@@ -418,8 +580,8 @@
 
   </main>
 
-  <!-- ================= CLEAN FOOTER ================= -->
-  <footer class="mt-12 border-t border-white/10 glass-nav py-6 text-center text-xs text-teal-200/80 px-4">
+  <!-- ================= FOOTER ================= -->
+  <footer class="mt-20 border-t border-white/10 glass-nav py-8 text-center text-xs text-teal-200/80 px-4">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="font-bold text-white text-sm">
         Світ Водоростей
@@ -430,7 +592,7 @@
     </div>
   </footer>
 
-  <!-- ================= SCRIPTS ================= -->
+  <!-- ================= LOGIC SCRIPTS ================= -->
   <script>
     lucide.createIcons();
 
@@ -481,7 +643,7 @@
     }
     const sound = new SimpleAudio();
 
-    // Sound button
+    // Sound toggle
     const sBtn = document.getElementById('sound-btn');
     const sOn = document.getElementById('sound-on');
     const sOff = document.getElementById('sound-off');
@@ -492,7 +654,7 @@
       if (sound.enabled) sound.pop();
     });
 
-    /* Bright Canvas Bubbles */
+    /* Interactive Canvas Bubbles */
     const canvas = document.getElementById('bubbles-canvas');
     const ctx = canvas.getContext('2d');
     let poppedCount = 0;
@@ -569,7 +731,194 @@
       }
     });
 
-    /* Simple, Approachable Quiz */
+    /* ============================================================
+       MICROSCOPE MODULE
+       ============================================================ */
+    const specimens = {
+      chlamy: {
+        name: "Хламідомонада",
+        badge: "Одноклітинна зелена водорость",
+        desc: "Мікроскопічна рухлива клітина грушоподібної форми. Сама пливе на сонячне світло, загрібаючи джгутиками.",
+        zoom: "600x",
+        parts: [
+          "🔴 <strong>Стигма (вічко):</strong> червона цятка, що реагує на світло.",
+          "🏊 <strong>2 джгутики:</strong> забезпечують швидкий рух уперед.",
+          "🥣 <strong>Чашоподібний хроматофор:</strong> містить хлорофіл для фотосинтезу."
+        ],
+        svg: `
+          <div class="relative w-36 h-48 rounded-[50%_50%_45%_45%] bg-gradient-to-b from-emerald-400 to-teal-600 border-2 border-emerald-200 shadow-inner flex items-center justify-center animate-pulse">
+            <!-- Flagella -->
+            <div class="absolute -top-7 left-10 w-1 h-8 bg-emerald-200 rotate-[-25deg] origin-bottom rounded-full"></div>
+            <div class="absolute -top-7 right-10 w-1 h-8 bg-emerald-200 rotate-[25deg] origin-bottom rounded-full"></div>
+            <!-- Red Eye (Stigma) -->
+            <div class="absolute top-10 right-6 w-3.5 h-3.5 bg-red-500 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.8)] border border-white"></div>
+            <!-- Nucleus -->
+            <div class="w-10 h-10 rounded-full bg-teal-900/60 border border-teal-200/50 flex items-center justify-center text-[10px] text-teal-200 font-mono">Ядро</div>
+          </div>
+        `
+      },
+      spiro: {
+        name: "Спірогіра",
+        badge: "Багатоклітинна нитчаста водорость",
+        desc: "Нитка з циліндричних клітин, які з'єднані в довгі смарагдові ланцюжки. Усередині кожної клітини закручена дивовижна спіраль.",
+        zoom: "400x",
+        parts: [
+          "🌀 <strong>Спіральний хроматофор:</strong> зелена хвиляста стрічка вздовж клітини.",
+          "🧱 <strong>Целюлозна оболонка:</strong> прозорі прямокутні стінки між клітинами.",
+          "💧 <strong>Слиз:</strong> захищає нитку від висихання та робить її слизькою на дотик."
+        ],
+        svg: `
+          <div class="w-48 h-32 rounded-xl border-2 border-emerald-300 bg-teal-950/40 relative overflow-hidden flex items-center justify-center">
+            <!-- Cell border divider -->
+            <div class="absolute inset-y-0 left-1/2 w-0.5 bg-emerald-300/60"></div>
+            <!-- Spiral ribbons -->
+            <svg class="w-full h-full absolute inset-0 opacity-80" viewBox="0 0 200 100">
+              <path d="M 10 50 Q 50 10, 100 50 T 190 50" fill="none" stroke="#34d399" stroke-width="8" stroke-linecap="round"/>
+              <path d="M 10 50 Q 50 90, 100 50 T 190 50" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" stroke-dasharray="8 4"/>
+            </svg>
+            <div class="relative z-10 w-7 h-7 rounded-full bg-teal-300/30 border border-white/60"></div>
+          </div>
+        `
+      },
+      diatom: {
+        name: "Діатомова водорость",
+        badge: "Одноклітинна золотиста водорость",
+        desc: "Ювелірне диво природи. Кожна клітина живе у міцному прозорому панцирі з чистого кремнію, наче в скляній скриньці.",
+        zoom: "800x",
+        parts: [
+          "💎 <strong>Кремнієвий панцир:</strong> складається з двох половинок (як кришка й коробка).",
+          "🟡 <strong>Золотистий колір:</strong> окрім хлорофілу містить буро-жовті пігменти.",
+          "🌍 <strong>Діатоміт:</strong> гірська порода, утворена з мільярдів відмерлих панцирів."
+        ],
+        svg: `
+          <div class="w-44 h-24 rounded-full border-2 border-cyan-200 bg-gradient-to-r from-amber-500/40 via-teal-500/40 to-amber-500/40 relative flex items-center justify-center shadow-[0_0_20px_rgba(45,212,191,0.3)]">
+            <div class="absolute inset-x-2 top-1/2 h-0.5 bg-cyan-200/60"></div>
+            <div class="grid grid-cols-6 gap-2 w-32 opacity-70">
+              <div class="w-2 h-2 rounded-full bg-cyan-200"></div>
+              <div class="w-2 h-2 rounded-full bg-cyan-200"></div>
+              <div class="w-2 h-2 rounded-full bg-cyan-200"></div>
+              <div class="w-2 h-2 rounded-full bg-cyan-200"></div>
+              <div class="w-2 h-2 rounded-full bg-cyan-200"></div>
+              <div class="w-2 h-2 rounded-full bg-cyan-200"></div>
+            </div>
+          </div>
+        `
+      }
+    };
+
+    const microBtns = document.querySelectorAll('.micro-btn');
+    const microGraphic = document.getElementById('micro-graphic');
+    const microZoom = document.getElementById('micro-zoom');
+    const specimenName = document.getElementById('specimen-name');
+    const specimenBadge = document.getElementById('specimen-badge');
+    const specimenDesc = document.getElementById('specimen-desc');
+    const specimenParts = document.getElementById('specimen-parts');
+
+    function setSpecimen(key) {
+      const sp = specimens[key];
+      microGraphic.innerHTML = sp.svg;
+      microZoom.textContent = sp.zoom;
+      specimenName.textContent = sp.name;
+      specimenBadge.textContent = sp.badge;
+      specimenDesc.textContent = sp.desc;
+
+      specimenParts.innerHTML = sp.parts.map(p => `
+        <div class="p-2.5 rounded-xl bg-white/5 border border-white/10 text-cyan-50">
+          ${p}
+        </div>
+      `).join('');
+    }
+
+    microBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sound.pop();
+        microBtns.forEach(b => {
+          b.className = 'micro-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white/10 hover:bg-white/20 text-white transition';
+        });
+        btn.className = 'micro-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-teal-300 text-slate-950 shadow-md transition';
+        setSpecimen(btn.getAttribute('data-specimen'));
+      });
+    });
+
+    setSpecimen('chlamy');
+
+    /* ============================================================
+       DEPTH MODULE
+       ============================================================ */
+    const depthLevels = [
+      {
+        title: "Царство Зелених Водоростей",
+        zone: "Сонячний басейн океану (0 – 25 м)",
+        info: "Сюди проникає весь сонячний спектр. Зелений пігмент хлорофіл поглинає червоні й сині промені для найактивнішого фотосинтезу.",
+        icon: "🌱",
+        gradient: "from-emerald-900/60 to-teal-900/40",
+        border: "border-emerald-300/40"
+      },
+      {
+        title: "Підводні Бурі Ліси",
+        zone: "Сутінкові середні глибини (до 100 м)",
+        info: "Червоні промені сюди вже майже не доходять. Бурий пігмент фукоксантин вловлює розсіяні жовто-зелені промені, живлячи гігантів Макроцистіса.",
+        icon: "🌊",
+        gradient: "from-amber-950/70 to-teal-950/50",
+        border: "border-amber-300/40"
+      },
+      {
+        title: "Таємничі Червоні Багрянки",
+        zone: "Глибоководна безодня (до 200+ м)",
+        info: "На таку глибину пробивається лише крихта короткохвильового синього світла. Особливі пігменти фікобіліни вловлюють його, дозволяючи багрянкам жити в сутінках.",
+        icon: "🏮",
+        gradient: "from-rose-950/70 to-slate-950/70",
+        border: "border-rose-300/40"
+      }
+    ];
+
+    const depthBtns = document.querySelectorAll('.depth-btn');
+    const depthBanner = document.getElementById('depth-banner');
+    const depthZoneTitle = document.getElementById('depth-zone-title');
+    const depthTitle = document.getElementById('depth-title');
+    const depthInfo = document.getElementById('depth-info');
+    const depthIcon = document.getElementById('depth-icon');
+
+    depthBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sound.pop();
+        const idx = parseInt(btn.getAttribute('data-depth'));
+        const d = depthLevels[idx];
+
+        depthBtns.forEach((b, i) => {
+          b.className = 'depth-btn p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 text-center transition';
+        });
+
+        if (idx === 0) btn.className = 'depth-btn p-3 sm:p-4 rounded-2xl bg-emerald-400/30 border border-emerald-300/50 text-center transition';
+        if (idx === 1) btn.className = 'depth-btn p-3 sm:p-4 rounded-2xl bg-amber-400/30 border border-amber-300/50 text-center transition';
+        if (idx === 2) btn.className = 'depth-btn p-3 sm:p-4 rounded-2xl bg-rose-400/30 border border-rose-300/50 text-center transition';
+
+        depthBanner.className = `p-6 sm:p-8 rounded-2xl bg-gradient-to-r ${d.gradient} border ${d.border} transition-all duration-500`;
+        depthZoneTitle.textContent = d.zone;
+        depthTitle.textContent = d.title;
+        depthInfo.textContent = d.info;
+        depthIcon.textContent = d.icon;
+      });
+    });
+
+    /* ============================================================
+       MYTH BUSTERS MODULE
+       ============================================================ */
+    const mythCards = document.querySelectorAll('.myth-card');
+    mythCards.forEach(card => {
+      card.addEventListener('click', () => {
+        sound.pop();
+        const ans = card.querySelector('.myth-answer');
+        const icon = card.querySelector('.myth-icon');
+        const isHidden = ans.classList.contains('hidden');
+        ans.classList.toggle('hidden', !isHidden);
+        icon.textContent = isHidden ? '✕' : '＋';
+      });
+    });
+
+    /* ============================================================
+       QUIZ MODULE
+       ============================================================ */
     const quizData = [
       {
         question: "Яка водорость відома як «морська капуста» та багата на йод?",
