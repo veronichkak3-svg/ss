@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Цікаві факти про водорості | Біологія 7 клас</title>
-  <meta name="description" content="Інтерактивний освітній вебсайт про зелені, бурі та червоні водорості для учнів 7 класу. Факти, ілюстрації та захоплива вікторина.">
+  <title>Водорості | Біологія 7 клас</title>
+  <meta name="description" content="Ультрасучасний наочний гід про водорості для уроку біології в 7 класі. Зручно для проектора, ПК та смартфонів.">
   
-  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Tailwind CSS CDN with custom config -->
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -29,35 +29,8 @@
               midnight: '#072547',
               navy: '#0a3460',
               marine: '#0c4a75',
-              teal: '#0e7490',
               cyan: '#06b6d4',
               bright: '#38bdf8',
-            },
-            algae: {
-              green: '#10b981',
-              emerald: '#059669',
-              light: '#34d399',
-              brown: '#d97706',
-              amber: '#b45309',
-              red: '#f43f5e',
-              rose: '#e11d48',
-            }
-          },
-          animation: {
-            'float-slow': 'float 8s ease-in-out infinite',
-            'float-medium': 'float 5s ease-in-out infinite',
-            'pulse-subtle': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'shimmer': 'shimmer 2.5s infinite',
-            'light-ray': 'ray 10s ease-in-out infinite alternate',
-          },
-          keyframes: {
-            float: {
-              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
-              '50%': { transform: 'translateY(-14px) rotate(2deg)' },
-            },
-            ray: {
-              '0%': { opacity: '0.2', transform: 'rotate(-10deg) scaleX(0.9)' },
-              '100%': { opacity: '0.45', transform: 'rotate(8deg) scaleX(1.15)' },
             }
           }
         }
@@ -67,819 +40,454 @@
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Canvas Confetti for Quiz Victory -->
+  <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
   <style>
     /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #020b18;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #0c4a75;
-      border-radius: 5px;
-      border: 2px solid #020b18;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #06b6d4;
-    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #020b18; }
+    ::-webkit-scrollbar-thumb { background: #0e7490; border-radius: 4px; }
 
-    /* Glassmorphism Styles */
+    /* Glassmorphism */
     .glass-card {
-      background: rgba(7, 37, 71, 0.55);
+      background: rgba(7, 37, 71, 0.65);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(56, 189, 248, 0.16);
-      box-shadow: 0 10px 30px -5px rgba(2, 11, 24, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      box-shadow: 0 10px 30px -5px rgba(2, 11, 24, 0.7);
     }
-    .glass-card-hover {
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .glass-card-hover:hover {
-      transform: translateY(-6px);
-      border-color: rgba(56, 189, 248, 0.4);
-      box-shadow: 0 20px 40px -10px rgba(6, 182, 212, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
-    }
-
     .glass-nav {
-      background: rgba(4, 23, 46, 0.75);
+      background: rgba(4, 23, 46, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(56, 189, 248, 0.15);
     }
 
-    /* Underwater Sunlight Rays */
-    .sun-rays {
-      background: radial-gradient(ellipse at 50% -20%, rgba(56, 189, 248, 0.28) 0%, rgba(6, 182, 212, 0.12) 40%, transparent 75%);
+    /* Projector Presentation Mode (Extra High Contrast & Legibility) */
+    body.projector-mode {
+      font-size: 110%;
     }
-
-    .light-beam {
-      position: absolute;
-      top: 0;
-      width: 140px;
-      height: 100vh;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(56, 189, 248, 0.04) 50%, transparent 100%);
-      filter: blur(35px);
-      pointer-events: none;
-      transform-origin: top center;
+    body.projector-mode .glass-card {
+      background: rgba(4, 23, 46, 0.92);
+      border-color: rgba(56, 189, 248, 0.45);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
     }
-
-    /* 3D tilt smoothness */
-    .tilt-card {
-      transform-style: preserve-3d;
-      perspective: 1000px;
+    body.projector-mode p, body.projector-mode span {
+      font-weight: 500;
     }
   </style>
 </head>
 
-<body class="bg-ocean-abyss text-slate-100 font-sans selection:bg-cyan-500 selection:text-white min-h-screen relative overflow-x-hidden">
+<body class="bg-ocean-abyss text-slate-100 font-sans selection:bg-cyan-500 selection:text-white min-h-screen relative overflow-x-hidden transition-all duration-300">
 
-  <!-- ================= CANVAS BACKGROUND: INTERACTIVE BUBBLES ================= -->
-  <canvas id="bubbles-canvas" class="fixed inset-0 pointer-events-auto z-0 opacity-80" title="Клікай на бульбашки, щоб луснути їх!"></canvas>
+  <!-- ================= INTERACTIVE BUBBLE CANVAS ================= -->
+  <canvas id="bubbles-canvas" class="fixed inset-0 pointer-events-auto z-0 opacity-75" title="Клікай на бульбашки, щоб лускати їх!"></canvas>
 
-  <!-- ================= UNDERWATER AMBIENT LIGHTING ================= -->
+  <!-- ================= SUBTLE AMBIENT OCEAN GLOW ================= -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-    <div class="sun-rays absolute inset-0"></div>
-    <div class="light-beam left-1/4 animate-light-ray" style="animation-delay: 0s;"></div>
-    <div class="light-beam left-2/3 animate-light-ray" style="animation-delay: -5s;"></div>
-    <!-- Deep gradient glow at bottom -->
-    <div class="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[90vw] h-[500px] bg-cyan-600/10 rounded-full blur-[140px]"></div>
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[90vw] h-[400px] bg-cyan-500/15 rounded-full blur-[140px]"></div>
+    <div class="absolute bottom-0 right-0 w-[50vw] h-[400px] bg-emerald-500/10 rounded-full blur-[150px]"></div>
   </div>
 
-  <!-- ================= FLOATING DEPTH & BUBBLE COUNTER HUD ================= -->
-  <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-auto">
-    <!-- Bubble Pop Counter Badge -->
-    <div id="bubble-counter-badge" class="glass-card px-3.5 py-1.5 rounded-full flex items-center gap-2 text-xs font-semibold text-cyan-300 border border-cyan-500/30 shadow-lg cursor-pointer hover:border-cyan-400 transition" title="Скільки бульбашок ти луснув">
-      <span class="animate-bounce">🫧</span>
-      <span>Луснуто: <strong id="bubble-count" class="text-white font-mono text-sm">0</strong></span>
+  <!-- ================= QUICK HUD / FLOATING BUTTONS ================= -->
+  <div class="fixed bottom-4 right-4 z-40 flex items-center gap-2 pointer-events-auto">
+    <!-- Bubble Counter -->
+    <div id="bubble-counter" class="glass-card px-3 py-1.5 rounded-full text-xs font-bold text-cyan-300 border border-cyan-400/30 flex items-center gap-1.5 shadow-lg select-none cursor-pointer" title="Лускай бульбашки мишкою чи пальцем">
+      <span>🫧</span>
+      <span id="bubble-count" class="font-mono text-white text-sm">0</span>
     </div>
 
-    <!-- Depth Meter -->
-    <div class="glass-card px-4 py-2.5 rounded-2xl flex items-center gap-3 text-xs font-medium text-slate-300 border border-slate-700/60 shadow-xl">
-      <i data-lucide="compass" class="w-4 h-4 text-cyan-400"></i>
-      <div>
-        <div class="text-[10px] uppercase tracking-wider text-slate-400">Глибина занурення</div>
-        <div class="text-sm font-bold text-cyan-300 font-mono flex items-center gap-1">
-          <span id="depth-indicator">0</span> м
-          <span id="depth-zone" class="text-[11px] font-normal text-emerald-400 ml-1">(Поверхня)</span>
-        </div>
-      </div>
-    </div>
+    <!-- Presentation / Fullscreen Button (Super for school projector!) -->
+    <button id="fullscreen-btn" class="glass-card w-10 h-10 rounded-full text-cyan-300 hover:text-white flex items-center justify-center border border-cyan-400/40 shadow-lg transition active:scale-95" title="Повноекранний режим для проектора">
+      <i data-lucide="maximize" class="w-4 h-4"></i>
+    </button>
   </div>
 
   <!-- ================= NAVIGATION BAR ================= -->
-  <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300" id="navbar">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+  <header class="fixed top-0 left-0 right-0 z-50 glass-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
       
-      <!-- Logo -->
-      <a href="#" class="flex items-center gap-3 group">
-        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform duration-300">
-          <i data-lucide="waves" class="w-6 h-6 text-slate-950 stroke-[2.5]"></i>
+      <!-- Logo / Title -->
+      <a href="#" class="flex items-center gap-3">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-cyan-500/20 shrink-0">
+          <i data-lucide="waves" class="w-5 h-5 sm:w-6 sm:h-6 text-slate-950 stroke-[2.5]"></i>
         </div>
         <div>
-          <span class="font-outfit font-extrabold text-lg sm:text-xl text-white tracking-tight flex items-center gap-1">
-            Algae<span class="text-cyan-400">Sphere</span>
+          <span class="font-outfit font-black text-lg sm:text-2xl text-white tracking-tight">
+            Водорості <span class="text-cyan-400">• 7 Клас</span>
           </span>
-          <span class="block text-[11px] font-medium text-cyan-300/80 -mt-1 tracking-wide uppercase">Біологія • 7 Клас</span>
+          <span class="block text-[11px] sm:text-xs text-cyan-300/80 uppercase font-semibold tracking-wider">Урок біології рослин</span>
         </div>
       </a>
 
-      <!-- Desktop Nav Links -->
-      <nav class="hidden md:flex items-center gap-1 bg-ocean-deep/60 p-1.5 rounded-full border border-white/10">
-        <a href="#about" class="px-4 py-2 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 transition">Що це таке?</a>
-        <a href="#facts" class="px-4 py-2 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 transition">Цікаві факти</a>
-        <a href="#classes" class="px-4 py-2 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 transition">Групи водоростей</a>
-        <a href="#quiz" class="px-4 py-2 rounded-full text-sm font-medium text-cyan-300 hover:text-white hover:bg-cyan-500/20 transition flex items-center gap-1.5">
-          <i data-lucide="sparkles" class="w-4 h-4 text-cyan-400"></i>
-          Вікторина
+      <!-- Quick Nav Buttons for Projector/Teacher -->
+      <div class="flex items-center gap-2">
+        <a href="#groups" class="hidden sm:inline-flex px-3.5 py-1.5 rounded-xl glass-card text-xs sm:text-sm font-semibold text-slate-200 hover:text-cyan-300 transition">
+          🌿 3 Групи
         </a>
-      </nav>
-
-      <!-- Action Buttons -->
-      <div class="flex items-center gap-2.5">
-        <!-- Sound Effect Toggle -->
-        <button id="sound-toggle-btn" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-300 hover:text-cyan-300 hover:border-cyan-400/40 transition" title="Увімкнути / вимкнути звукові ефекти">
-          <i data-lucide="volume-2" id="sound-icon-on" class="w-5 h-5"></i>
-          <i data-lucide="volume-x" id="sound-icon-off" class="w-5 h-5 hidden text-slate-400"></i>
-        </button>
-
-        <!-- CTA Quiz Button -->
-        <a href="#quiz" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 text-slate-950 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-400/40 hover:scale-[1.03] active:scale-[0.98] transition">
-          <i data-lucide="help-circle" class="w-4 h-4 stroke-[2.5]"></i>
-          <span>Тест знань</span>
+        <a href="#facts" class="hidden sm:inline-flex px-3.5 py-1.5 rounded-xl glass-card text-xs sm:text-sm font-semibold text-slate-200 hover:text-cyan-300 transition">
+          ⚡ Топ-факти
+        </a>
+        <a href="#quiz" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-cyan-400 to-emerald-400 text-slate-950 shadow-md hover:scale-105 active:scale-95 transition flex items-center gap-1.5">
+          <i data-lucide="check-circle" class="w-4 h-4 stroke-[2.5]"></i>
+          <span>Тест (5 пит.)</span>
         </a>
 
-        <!-- Mobile Menu Toggle Button -->
-        <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-200">
-          <i data-lucide="menu" class="w-5 h-5"></i>
+        <!-- Sound Toggle -->
+        <button id="sound-btn" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl glass-card flex items-center justify-center text-slate-300 hover:text-cyan-300 transition" title="Звукові ефекти">
+          <i data-lucide="volume-2" id="sound-on" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+          <i data-lucide="volume-x" id="sound-off" class="w-4 h-4 sm:w-5 sm:h-5 hidden text-slate-500"></i>
         </button>
       </div>
 
-    </div>
-
-    <!-- Mobile Nav Menu Dropdown -->
-    <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-white/10 px-6 py-4 space-y-2">
-      <a href="#about" class="block py-2.5 text-base font-medium text-slate-200 hover:text-cyan-300 mobile-link">Що це таке?</a>
-      <a href="#facts" class="block py-2.5 text-base font-medium text-slate-200 hover:text-cyan-300 mobile-link">Цікаві факти</a>
-      <a href="#classes" class="block py-2.5 text-base font-medium text-slate-200 hover:text-cyan-300 mobile-link">Групи водоростей</a>
-      <a href="#quiz" class="block py-2.5 text-base font-semibold text-cyan-300 hover:text-white mobile-link">Вікторина (5 запитань)</a>
     </div>
   </header>
 
-  <main class="relative z-10 pt-24 sm:pt-28">
+  <main class="relative z-10 pt-20 sm:pt-28">
 
-    <!-- ================= HERO SECTION ================= -->
-    <section class="min-h-[85vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16 relative">
-      <div class="max-w-4xl mx-auto text-center">
-        
-        <!-- Top Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card border-cyan-400/30 text-cyan-300 text-xs sm:text-sm font-semibold mb-8 animate-float-medium">
-          <span class="flex h-2 w-2 relative">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-300"></span>
-          </span>
-          Біологія рослин • Шкільний гід 7 класу
-        </div>
-
-        <!-- Main Heading -->
-        <h1 class="font-outfit font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight text-white mb-6 leading-[1.12]">
-          Таємничий світ <br class="hidden sm:inline" />
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-teal-300 to-emerald-400">
-            підводних водоростей
-          </span>
-        </h1>
-
-        <!-- Subtitle -->
-        <p class="text-slate-300 text-base sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10 font-light">
-          Вони не мають ні коренів, ні листя, але виробляють кожний другий вдих кисню на Землі! 
-          Поринь у глибини океану та дізнайся, як влаштовані найдавніші володарі нашої планети.
-        </p>
-
-        <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href="#facts" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 text-slate-950 font-bold text-base shadow-xl shadow-cyan-500/30 hover:shadow-cyan-400/50 hover:scale-[1.03] active:scale-[0.98] transition flex items-center justify-center gap-2.5">
-            <span>Відкрити дивовижні факти</span>
-            <i data-lucide="arrow-down-circle" class="w-5 h-5 stroke-[2.5]"></i>
-          </a>
-          
-          <a href="#quiz" class="w-full sm:w-auto px-8 py-4 rounded-2xl glass-card text-white hover:text-cyan-300 font-semibold text-base border-cyan-500/30 hover:border-cyan-400 transition flex items-center justify-center gap-2.5">
-            <i data-lucide="play" class="w-4 h-4 fill-current text-cyan-400"></i>
-            <span>Пройти вікторину</span>
-          </a>
-        </div>
-
-        <!-- Quick Stats Grid -->
-        <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-left">
-          
-          <div class="glass-card p-5 rounded-2xl border-white/10 hover:border-cyan-400/40 transition">
-            <div class="flex items-center gap-2 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-1">
-              <i data-lucide="wind" class="w-4 h-4"></i>
-              Кисень
-            </div>
-            <div class="font-outfit text-2xl sm:text-3xl font-extrabold text-white">~70%</div>
-            <div class="text-xs text-slate-400 mt-1">усього кисню планети виробляє фітопланктон</div>
-          </div>
-
-          <div class="glass-card p-5 rounded-2xl border-white/10 hover:border-emerald-400/40 transition">
-            <div class="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-1">
-              <i data-lucide="maximize" class="w-4 h-4"></i>
-              Рекорд довжини
-            </div>
-            <div class="font-outfit text-2xl sm:text-3xl font-extrabold text-white">до 60 м</div>
-            <div class="text-xs text-slate-400 mt-1">виростає бура водорость Макроцистіс</div>
-          </div>
-
-          <div class="glass-card p-5 rounded-2xl border-white/10 hover:border-rose-400/40 transition">
-            <div class="flex items-center gap-2 text-rose-400 text-xs font-semibold uppercase tracking-wider mb-1">
-              <i data-lucide="arrow-down" class="w-4 h-4"></i>
-              Глибина росту
-            </div>
-            <div class="font-outfit text-2xl sm:text-3xl font-extrabold text-white">200+ м</div>
-            <div class="text-xs text-slate-400 mt-1">досягають червоні водорості (багрянки)</div>
-          </div>
-
-          <div class="glass-card p-5 rounded-2xl border-white/10 hover:border-amber-400/40 transition">
-            <div class="flex items-center gap-2 text-amber-400 text-xs font-semibold uppercase tracking-wider mb-1">
-              <i data-lucide="history" class="w-4 h-4"></i>
-              Вік на Землі
-            </div>
-            <div class="font-outfit text-2xl sm:text-3xl font-extrabold text-white">> 1 млрд</div>
-            <div class="text-xs text-slate-400 mt-1">років тому з'явилися перші водорості</div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- ================= WHAT ARE ALGAE? (7TH GRADE ESSENTIALS) ================= -->
-    <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div class="glass-card rounded-3xl p-8 sm:p-12 relative overflow-hidden border-cyan-500/20">
-        
-        <!-- Glow highlight behind corner -->
-        <div class="absolute -top-24 -right-24 w-80 h-80 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
-          <div class="lg:col-span-7 space-y-5">
-            <div class="inline-flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider">
-              <i data-lucide="book-open" class="w-4 h-4"></i>
-              Шкільна біологічна шпаргалка
-            </div>
-            
-            <h2 class="font-outfit font-bold text-3xl sm:text-4xl text-white leading-tight">
-              Чому водорості називають <span class="text-cyan-300">нижчими рослинами?</span>
-            </h2>
-            
-            <p class="text-slate-300 leading-relaxed text-sm sm:text-base font-light">
-              На відміну від дерев чи квітів, у водоростей <strong>немає справжніх органів</strong>: ні коренів, ні стебел, ні листків, ні квіток. Їхнє тіло не поділене на тканини й називається особливим словом — <span class="text-emerald-300 font-semibold underline decoration-emerald-500/50 underline-offset-4">слань (або талом)</span>.
-            </p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3">
-              <div class="flex items-start gap-3 bg-ocean-deep/60 p-4 rounded-xl border border-white/5">
-                <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0 mt-0.5">
-                  <i data-lucide="anchor" class="w-4 h-4"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-sm text-white">Ризоїди замість коренів</h4>
-                  <p class="text-xs text-slate-400 mt-1">Нитки для закріплення на дні або камінні. Воду вбирає все тіло одразу!</p>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-3 bg-ocean-deep/60 p-4 rounded-xl border border-white/5">
-                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 mt-0.5">
-                  <i data-lucide="sun" class="w-4 h-4"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-sm text-white">Хроматофор</h4>
-                  <p class="text-xs text-slate-400 mt-1">Особлива органела, аналог хлоропластів, де йде фотосинтез і утворюється кисень.</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Interactive Diagram Box -->
-          <div class="lg:col-span-5 bg-gradient-to-b from-ocean-deep to-ocean-abyss p-6 rounded-2xl border border-white/10 relative">
-            <h3 class="font-outfit font-bold text-lg text-white mb-4 flex items-center justify-between">
-              <span>Секрет занурення за кольором</span>
-              <span class="text-xs font-normal text-cyan-400">Світловий спектр</span>
-            </h3>
-
-            <div class="space-y-3 text-xs">
-              <!-- Green Zone -->
-              <div class="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between">
-                <div>
-                  <span class="font-bold text-emerald-300 block text-sm">Зелені водорості</span>
-                  <span class="text-slate-400">Хлорофіл поглинає червоні та сині промені</span>
-                </div>
-                <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono font-bold">0–25 м</span>
-              </div>
-
-              <!-- Brown Zone -->
-              <div class="p-3.5 rounded-xl bg-amber-950/40 border border-amber-500/30 flex items-center justify-between">
-                <div>
-                  <span class="font-bold text-amber-300 block text-sm">Бурі водорості</span>
-                  <span class="text-slate-400">Пігмент фукоксантин вловлює розсіяне світло</span>
-                </div>
-                <span class="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 font-mono font-bold">до 100 м</span>
-              </div>
-
-              <!-- Red Zone -->
-              <div class="p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/30 flex items-center justify-between">
-                <div>
-                  <span class="font-bold text-rose-300 block text-sm">Червоні водорості</span>
-                  <span class="text-slate-400">Фікобіліни вловлюють залишки синього світла</span>
-                </div>
-                <span class="px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 font-mono font-bold">до 200+ м</span>
-              </div>
-            </div>
-
-            <div class="mt-4 text-[11px] text-slate-400 text-center italic">
-              💡 Що глибше проникає світло, то специфічніші пігменти потрібні рослині!
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-
-    <!-- ================= 8 SCIENTIFIC FACT CARDS ================= -->
-    <section id="facts" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <!-- ================= HERO: BIG IMPACT, MINIMAL TEXT ================= -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 text-center">
       
-      <!-- Section Header -->
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <div class="inline-flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-3">
-          <i data-lucide="sparkle" class="w-4 h-4"></i>
-          Наукові відкриття
-        </div>
-        <h2 class="font-outfit font-black text-3xl sm:text-5xl text-white tracking-tight mb-4">
-          8 фактів, які <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">здивують ваш клас</span>
-        </h2>
-        <p class="text-slate-400 text-sm sm:text-base">
-          Обери категорію нижче або досліджуй усі факти поспіль. Тільки біологія 7 класу, жодної нудьги!
-        </p>
-
-        <!-- Category Filter Buttons -->
-        <div class="flex flex-wrap items-center justify-center gap-2 mt-8" id="facts-filter-container">
-          <button data-filter="all" class="fact-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition bg-cyan-500 text-slate-950 shadow-md">Всі факти (8)</button>
-          <button data-filter="green" class="fact-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition glass-card text-slate-300 hover:text-white">Зелені водорості</button>
-          <button data-filter="brown" class="fact-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition glass-card text-slate-300 hover:text-white">Бурі гіганти</button>
-          <button data-filter="red" class="fact-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition glass-card text-slate-300 hover:text-white">Червоні глибини</button>
-          <button data-filter="super" class="fact-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition glass-card text-slate-300 hover:text-white">Суперсили природи</button>
-        </div>
+      <!-- Class Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/40 text-cyan-300 text-xs sm:text-sm font-bold uppercase tracking-wider mb-6">
+        <span>🌊 Шкільна програма • 7 Клас</span>
       </div>
 
-      <!-- Fact Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="facts-grid">
+      <!-- Main Heading (Huge for Projector visibility) -->
+      <h1 class="font-outfit font-black text-4xl sm:text-6xl lg:text-7xl text-white tracking-tight mb-4 leading-[1.1]">
+        Володарі Океану: <br class="hidden sm:inline" />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400">
+          Усе найголовніше за 5 хвилин
+        </span>
+      </h1>
 
-        <!-- FACT 1 -->
-        <article class="fact-card glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between border-cyan-500/20" data-category="super">
+      <!-- Short Punchy Subtitle -->
+      <p class="text-slate-300 text-base sm:text-xl max-w-2xl mx-auto font-medium mb-10 leading-snug">
+        Не мають коренів, стебел та квіток, але виробляють більше половини кисню нашої планети!
+      </p>
+
+      <!-- 4 GIANT STAT TILES (Instant reading on projector & phones) -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 max-w-5xl mx-auto">
+        
+        <div class="glass-card p-4 sm:p-6 rounded-2xl border-cyan-400/30 text-center">
+          <div class="text-3xl sm:text-5xl font-black text-cyan-400 font-outfit mb-1">~70%</div>
+          <div class="font-bold text-sm sm:text-base text-white">Кисню планети</div>
+          <div class="text-xs text-slate-400 mt-1">виробляє морський фітопланктон</div>
+        </div>
+
+        <div class="glass-card p-4 sm:p-6 rounded-2xl border-emerald-400/30 text-center">
+          <div class="text-3xl sm:text-5xl font-black text-emerald-400 font-outfit mb-1">0</div>
+          <div class="font-bold text-sm sm:text-base text-white">Справжніх органів</div>
+          <div class="text-xs text-slate-400 mt-1">тіло — це суцільна слань (талом)</div>
+        </div>
+
+        <div class="glass-card p-4 sm:p-6 rounded-2xl border-amber-400/30 text-center">
+          <div class="text-3xl sm:text-5xl font-black text-amber-400 font-outfit mb-1">до 60 м</div>
+          <div class="font-bold text-sm sm:text-base text-white">Гігант Макроцистіс</div>
+          <div class="text-xs text-slate-400 mt-1">найдовша бура водорость світу</div>
+        </div>
+
+        <div class="glass-card p-4 sm:p-6 rounded-2xl border-rose-400/30 text-center">
+          <div class="text-3xl sm:text-5xl font-black text-rose-400 font-outfit mb-1">200+ м</div>
+          <div class="font-bold text-sm sm:text-base text-white">Глибина багрянок</div>
+          <div class="text-xs text-slate-400 mt-1">ростуть у найтемніших глибинах</div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= 3 MAIN GROUPS: PUNCHY & VISUAL ================= -->
+    <section id="groups" class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      
+      <div class="text-center mb-8">
+        <h2 class="font-outfit font-black text-3xl sm:text-5xl text-white tracking-tight">
+          3 Головні Групи Водоростей
+        </h2>
+        <p class="text-cyan-400 font-semibold text-sm sm:text-base mt-2">
+          Забарвлення залежить від глибини та пігментів!
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- 1. ЗЕЛЕНІ -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border-emerald-500/40 relative flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
-                Суперсила #1
+              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                0 – 25 метрів
               </span>
-              <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-                <i data-lucide="wind" class="w-5 h-5"></i>
-              </div>
+              <span class="text-2xl">🌱</span>
             </div>
 
-            <h3 class="font-outfit font-bold text-xl text-white mb-2 leading-snug">
-              Головні легені планети — це не ліси Амазонки!
-            </h3>
+            <h3 class="font-outfit font-black text-2xl sm:text-3xl text-emerald-300 mb-1">Зелені</h3>
+            <div class="text-xs text-slate-400 mb-4 font-semibold uppercase tracking-wider">Пігмент: Хлорофіл</div>
 
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 font-light">
-              Шкільні підручники часто хвалять ліси, але понад <strong>50–70% кисню</strong> всієї біосфери синтезує мікроскопічний океанічний <em>фітопланктон</em> (діатомові та одноклітинні зелені водорості). Кожен другий наш вдих належить їм!
-            </p>
+            <!-- Bullet points with zero fluff -->
+            <ul class="space-y-3 text-sm sm:text-base text-slate-200">
+              <li class="flex items-start gap-2.5">
+                <span class="text-emerald-400 font-bold">✔</span>
+                <span><strong>Хламідомонада:</strong> має червоне вічко (стигму) та 2 джгутики.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-emerald-400 font-bold">✔</span>
+                <span><strong>Хлорела:</strong> 50% білка, літала в космос для очищення повітря.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-emerald-400 font-bold">✔</span>
+                <span><strong>Спірогіра:</strong> спіральний стрічкоподібний хроматофор.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-emerald-400 font-bold">✔</span>
+                <span><strong>Ульва:</strong> їстівний «морський салат».</span>
+              </li>
+            </ul>
           </div>
 
-          <div class="mt-4 pt-4 border-t border-white/10 text-[11px] text-cyan-300/90 flex items-center gap-1.5 font-medium">
-            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-cyan-400 shrink-0"></i>
-            <span>Біосферна роль продуцентів</span>
+          <div class="mt-6 pt-4 border-t border-white/10 text-xs text-emerald-300 font-bold">
+            💡 Предки всіх наземних рослин!
           </div>
-        </article>
+        </div>
+
+        <!-- 2. БУРІ -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border-amber-500/40 relative flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                до 100 метрів
+              </span>
+              <span class="text-2xl">🌊</span>
+            </div>
+
+            <h3 class="font-outfit font-black text-2xl sm:text-3xl text-amber-300 mb-1">Бурі</h3>
+            <div class="text-xs text-slate-400 mb-4 font-semibold uppercase tracking-wider">Пігмент: Фукоксантин</div>
+
+            <ul class="space-y-3 text-sm sm:text-base text-slate-200">
+              <li class="flex items-start gap-2.5">
+                <span class="text-amber-400 font-bold">✔</span>
+                <span><strong>Виключно багатоклітинні:</strong> живуть тільки в морях та океанах.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-amber-400 font-bold">✔</span>
+                <span><strong>Ламінарія (морська капуста):</strong> рекордсмен за вмістом йоду.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-amber-400 font-bold">✔</span>
+                <span><strong>Макроцистіс:</strong> до 60 метрів, утворює підводні ліси.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-amber-400 font-bold">✔</span>
+                <span><strong>Повітряні пухирці:</strong> утримують велетенське тіло біля сонця.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-white/10 text-xs text-amber-300 font-bold">
+            💡 Захищають щитоподібну залозу людини!
+          </div>
+        </div>
+
+        <!-- 3. ЧЕРВОНІ -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border-rose-500/40 relative flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                до 200+ метрів
+              </span>
+              <span class="text-2xl">🏮</span>
+            </div>
+
+            <h3 class="font-outfit font-black text-2xl sm:text-3xl text-rose-300 mb-1">Червоні</h3>
+            <div class="text-xs text-slate-400 mb-4 font-semibold uppercase tracking-wider">Пігмент: Фікоеритрин</div>
+
+            <ul class="space-y-3 text-sm sm:text-base text-slate-200">
+              <li class="flex items-start gap-2.5">
+                <span class="text-rose-400 font-bold">✔</span>
+                <span><strong>Чемпіони глибин:</strong> вловлюють залишки синього світла на дні.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-rose-400 font-bold">✔</span>
+                <span><strong>Агар-агар:</strong> роблять мармелад, зефір та пастилу.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-rose-400 font-bold">✔</span>
+                <span><strong>Порфіра:</strong> відомі листи норі для приготування суші.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-rose-400 font-bold">✔</span>
+                <span><strong>Лабораторії:</strong> агар є поживним середовищем для бактерій.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-white/10 text-xs text-rose-300 font-bold">
+            💡 Замінник тваринного желатину!
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= 6 SHARPEST FACTS: MINIMAL WORDS ================= -->
+    <section id="facts" class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      
+      <div class="text-center mb-8">
+        <h2 class="font-outfit font-black text-3xl sm:text-5xl text-white tracking-tight">
+          6 Фактів, які легко запам'ятати
+        </h2>
+        <p class="text-slate-400 text-sm sm:text-base mt-2">
+          Головні тези для відповіді біля дошки на «12 балів»:
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        
+        <!-- FACT 1 -->
+        <div class="glass-card p-5 rounded-2xl border-cyan-400/30 flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0 text-xl font-bold">
+            🌬️
+          </div>
+          <div>
+            <h4 class="font-outfit font-bold text-lg text-white">Кожен 2-й вдих людини</h4>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1">Океанічний фітопланктон дає більше кисню, ніж усі тропічні ліси Землі разом узяті.</p>
+          </div>
+        </div>
 
         <!-- FACT 2 -->
-        <article class="fact-card glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between border-emerald-500/20" data-category="green">
+        <div class="glass-card p-5 rounded-2xl border-emerald-400/30 flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 text-xl font-bold">
+            👁️
+          </div>
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                Зелені водорості
-              </span>
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-                <i data-lucide="eye" class="w-5 h-5"></i>
-              </div>
-            </div>
-
-            <h3 class="font-outfit font-bold text-xl text-white mb-2 leading-snug">
-              Хламідомонада: клітина з власним «оком» і мотором
-            </h3>
-
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 font-light">
-              Ця мікроскопічна зелена водорость має два джгутики, якими загрібає воду, мов плавець. А найдивовижніше — яскраво-червоне світлочутливе вічко (<strong>стигма</strong>), яке допомагає їй плисти на світло заради фотосинтезу!
-            </p>
+            <h4 class="font-outfit font-bold text-lg text-white">Клітина з «оком»</h4>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1">Хламідомонада бачить світло завдяки червоній стигмі й сама пливе до сонця.</p>
           </div>
-
-          <div class="mt-4 pt-4 border-t border-white/10 text-[11px] text-emerald-300/90 flex items-center gap-1.5 font-medium">
-            <i data-lucide="compass" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
-            <span>Позитивний фототаксис</span>
-          </div>
-        </article>
+        </div>
 
         <!-- FACT 3 -->
-        <article class="fact-card glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between border-amber-500/20" data-category="brown">
+        <div class="glass-card p-5 rounded-2xl border-rose-400/30 flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-300 flex items-center justify-center shrink-0 text-xl font-bold">
+            🍮
+          </div>
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-500/30">
-                Бурі велетні
-              </span>
-              <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
-                <i data-lucide="trees" class="w-5 h-5"></i>
-              </div>
-            </div>
-
-            <h3 class="font-outfit font-bold text-xl text-white mb-2 leading-snug">
-              Підводні ліси та «повітряні кульки» макроцистіса
-            </h3>
-
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 font-light">
-              Бурі водорості (<em>Макроцистіс</em>) виростають до <strong>60 метрів</strong>, ростучи зі швидкістю до 50 см на день! Щоб така гігантська слань трималася біля поверхні сонця, у них є спеціальні газові пухирці-поплавці.
-            </p>
+            <h4 class="font-outfit font-bold text-lg text-white">Мармелад з водоростей</h4>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1">Агар-агар виварюють із червоних водоростей: він утворює желе без тваринних жирів.</p>
           </div>
-
-          <div class="mt-4 pt-4 border-t border-white/10 text-[11px] text-amber-300/90 flex items-center gap-1.5 font-medium">
-            <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
-            <span>Дім для видр, риб та крабів</span>
-          </div>
-        </article>
+        </div>
 
         <!-- FACT 4 -->
-        <article class="fact-card glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between border-rose-500/20" data-category="red">
+        <div class="glass-card p-5 rounded-2xl border-amber-400/30 flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0 text-xl font-bold">
+            🩺
+          </div>
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-rose-500/15 text-rose-300 border border-rose-500/30">
-                Червоні водорості
-              </span>
-              <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center">
-                <i data-lucide="sparkles" class="w-5 h-5"></i>
-              </div>
-            </div>
-
-            <h3 class="font-outfit font-bold text-xl text-white mb-2 leading-snug">
-              Справжній мармелад та зефір — подарунок червоних водоростей!
-            </h3>
-
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 font-light">
-              З багрянок видобувають <strong>агар-агар</strong> — речовину, яка застигає в міцне желе. Її додають у мармелад, цукерки «пташине молоко», а також використовують у чашках Петрі в лабораторіях для вирощування бактерій.
-            </p>
+            <h4 class="font-outfit font-bold text-lg text-white">Щит для здоров'я</h4>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1">30 грамів ламінарії на день повністю покривають норму йоду для роботи мозку.</p>
           </div>
-
-          <div class="mt-4 pt-4 border-t border-white/10 text-[11px] text-rose-300/90 flex items-center gap-1.5 font-medium">
-            <i data-lucide="utensils" class="w-3.5 h-3.5 text-rose-400 shrink-0"></i>
-            <span>Агар-агар у промисловості</span>
-          </div>
-        </article>
+        </div>
 
         <!-- FACT 5 -->
-        <article class="fact-card glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between border-green-500/20" data-category="green">
+        <div class="glass-card p-5 rounded-2xl border-cyan-400/30 flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0 text-xl font-bold">
+            ✨
+          </div>
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-green-500/15 text-green-300 border border-green-500/30">
-                Зелені водорості
-              </span>
-              <div class="w-10 h-10 rounded-xl bg-green-500/10 text-green-400 flex items-center justify-center">
-                <i data-lucide="rocket" class="w-5 h-5"></i>
-              </div>
-            </div>
-
-            <h3 class="font-outfit font-bold text-xl text-white mb-2 leading-snug">
-              Хлорела — перший зелений космонавт орбіти
-            </h3>
-
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 font-light">
-              Одноклітинна <strong>хлорела</strong> містить понад 50% чистісінького білка та купу вітамінів. Саме її вчені відправили в космос ще в 1960 році як ідеального кандидата для очищення повітря й харчування майбутніх марсіанських місій!
-            </p>
+            <h4 class="font-outfit font-bold text-lg text-white">Світіння нічних хвиль</h4>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1">Водорость <em>Ночесвітка</em> спалахує неоновим сяйвом, коли її турбують хвилі.</p>
           </div>
-
-          <div class="mt-4 pt-4 border-t border-white/10 text-[11px] text-green-300/90 flex items-center gap-1.5 font-medium">
-            <i data-lucide="flask-conical" class="w-3.5 h-3.5 text-green-400 shrink-0"></i>
-            <span>Космічна біологія</span>
-          </div>
-        </article>
+        </div>
 
         <!-- FACT 6 -->
-        <article class="fact-card glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between border-amber-500/20" data-category="brown">
+        <div class="glass-card p-5 rounded-2xl border-emerald-400/30 flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 text-xl font-bold">
+            🌳
+          </div>
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-500/30">
-                Бурі водорості
-              </span>
-              <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
-                <i data-lucide="heart-pulse" class="w-5 h-5"></i>
-              </div>
-            </div>
-
-            <h3 class="font-outfit font-bold text-xl text-white mb-2 leading-snug">
-              Ламінарія (морська капуста) рятує щитоподібну залозу
-            </h3>
-
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 font-light">
-              Ламінарія накопичує у своїх тканинах колосальну кількість <strong>органічного йоду</strong> з морської води. Всього 30 грамів морської капусти на добу забезпечують людині добову норму для здоров'я пам'яті та енергії.
-            </p>
+            <h4 class="font-outfit font-bold text-lg text-white">Прабабусі дубів і яблунь</h4>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1">470 млн років тому саме зелені водорості вийшли на сушу й дали початок усім рослинам.</p>
           </div>
-
-          <div class="mt-4 pt-4 border-t border-white/10 text-[11px] text-amber-300/90 flex items-center gap-1.5 font-medium">
-            <i data-lucide="activity" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
-            <span>Джерело йоду та мікроелементів</span>
-          </div>
-        </article>
-
-        <!-- FACT 7 -->
-        <article class="fact-card glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between border-cyan-500/20" data-category="super">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
-                Суперсила #2
-              </span>
-              <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-                <i data-lucide="zap" class="w-5 h-5"></i>
-              </div>
-            </div>
-
-            <h3 class="font-outfit font-bold text-xl text-white mb-2 leading-snug">
-              Біолюмінесценція: океан, що сяє неоновим блакитом
-            </h3>
-
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 font-light">
-              Деякі мікроскопічні джгутикові водорості (як-от <em>Ночесвітка</em>) світяться у воді вночі при будь-якому ударі хвилі або русі човна. Це хімічна реакція люциферину, яка відлякує хижаків і створює казкові «неонові хвилі».
-            </p>
-          </div>
-
-          <div class="mt-4 pt-4 border-t border-white/10 text-[11px] text-cyan-300/90 flex items-center gap-1.5 font-medium">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-cyan-400 shrink-0"></i>
-            <span>Світіння нічного моря</span>
-          </div>
-        </article>
-
-        <!-- FACT 8 -->
-        <article class="fact-card glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between border-emerald-500/20" data-category="green">
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                Еволюція
-              </span>
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-                <i data-lucide="git-branch" class="w-5 h-5"></i>
-              </div>
-            </div>
-
-            <h3 class="font-outfit font-bold text-xl text-white mb-2 leading-snug">
-              Прабабусі всіх яблунь, троянд та дубів на суші!
-            </h3>
-
-            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 font-light">
-              Близько 470 мільйонів років тому саме стародавні прісноводні <strong>зелені харові водорості</strong> здійснили сміливий стрибок на безлюдну сушу. Від них пішли мохи, папороті та всі сучасні квіткові дерева!
-            </p>
-          </div>
-
-          <div class="mt-4 pt-4 border-t border-white/10 text-[11px] text-emerald-300/90 flex items-center gap-1.5 font-medium">
-            <i data-lucide="globe-2" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
-            <span>Вихід життя на суходіл</span>
-          </div>
-        </article>
+        </div>
 
       </div>
 
     </section>
 
 
-    <!-- ================= COMPARISON / 3 MAIN GROUPS (CLASSES) ================= -->
-    <section id="classes" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-14">
-        <div class="inline-flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-3">
-          <i data-lucide="layers" class="w-4 h-4"></i>
-          Класифікація для 7 класу
-        </div>
-        <h2 class="font-outfit font-black text-3xl sm:text-5xl text-white tracking-tight mb-4">
-          Три царські родини водоростей
-        </h2>
-        <p class="text-slate-400 text-sm sm:text-base">
-          Забарвлення водоростей залежить від пігментів, якими вони вловлюють сонячне світло на різних глибинах.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        <!-- GREEN ALGAE -->
-        <div class="glass-card rounded-3xl p-7 border-emerald-500/30 flex flex-col justify-between relative overflow-hidden group hover:border-emerald-400/60 transition-all duration-300">
-          <div class="absolute -right-12 -top-12 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition"></div>
-          
-          <div>
-            <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center mb-6 shadow-inner">
-              <i data-lucide="leaf" class="w-7 h-7"></i>
-            </div>
-            
-            <h3 class="font-outfit font-extrabold text-2xl text-white mb-2">Зелені водорості</h3>
-            <p class="text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4">Chlorophyta • Поверхневі води</p>
-            
-            <p class="text-slate-300 text-sm leading-relaxed mb-6 font-light">
-              Містять хлорофіл, який не маскується іншими пігментами. Бувають одноклітинними, колоніальними та багатоклітинними.
-            </p>
-
-            <div class="space-y-2.5 text-xs text-slate-300">
-              <div class="flex items-center gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-                <span><strong>Одноклітинні:</strong> Хламідомонада, Хлорела</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-                <span><strong>Нитчасті:</strong> Спірогіра, Улотрикс</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-                <span><strong>Морські салати:</strong> Ульва</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-8 pt-5 border-t border-white/10 flex items-center justify-between text-xs text-emerald-300 font-semibold">
-            <span>Глибина: 0 – 25 метрів</span>
-            <span class="px-2.5 py-1 rounded-full bg-emerald-500/20">Хлорофіл a, b</span>
-          </div>
-        </div>
-
-        <!-- BROWN ALGAE -->
-        <div class="glass-card rounded-3xl p-7 border-amber-500/30 flex flex-col justify-between relative overflow-hidden group hover:border-amber-400/60 transition-all duration-300">
-          <div class="absolute -right-12 -top-12 w-40 h-40 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition"></div>
-          
-          <div>
-            <div class="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center mb-6 shadow-inner">
-              <i data-lucide="anchor" class="w-7 h-7"></i>
-            </div>
-            
-            <h3 class="font-outfit font-extrabold text-2xl text-white mb-2">Бурі водорості</h3>
-            <p class="text-amber-400 text-xs font-semibold uppercase tracking-wider mb-4">Phaeophyceae • Середні глибини</p>
-            
-            <p class="text-slate-300 text-sm leading-relaxed mb-6 font-light">
-              <strong>Виключно багатоклітинні</strong> морські мешканці. Своєрідний колір їм надає бурий пігмент фукоксантин.
-            </p>
-
-            <div class="space-y-2.5 text-xs text-slate-300">
-              <div class="flex items-center gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
-                <span><strong>Ламінарія:</strong> цінне джерело йоду</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
-                <span><strong>Макроцистіс:</strong> до 60 м завдовжки</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
-                <span><strong>Саргасум:</strong> плавучі зарості Саргасового моря</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-8 pt-5 border-t border-white/10 flex items-center justify-between text-xs text-amber-300 font-semibold">
-            <span>Глибина: до 100 метрів</span>
-            <span class="px-2.5 py-1 rounded-full bg-amber-500/20">Фукоксантин</span>
-          </div>
-        </div>
-
-        <!-- RED ALGAE -->
-        <div class="glass-card rounded-3xl p-7 border-rose-500/30 flex flex-col justify-between relative overflow-hidden group hover:border-rose-400/60 transition-all duration-300">
-          <div class="absolute -right-12 -top-12 w-40 h-40 bg-rose-500/10 rounded-full blur-2xl group-hover:bg-rose-500/20 transition"></div>
-          
-          <div>
-            <div class="w-14 h-14 rounded-2xl bg-rose-500/20 text-rose-300 flex items-center justify-center mb-6 shadow-inner">
-              <i data-lucide="flame" class="w-7 h-7"></i>
-            </div>
-            
-            <h3 class="font-outfit font-extrabold text-2xl text-white mb-2">Червоні водорості</h3>
-            <p class="text-rose-400 text-xs font-semibold uppercase tracking-wider mb-4">Rhodophyta (Багрянки) • Глибоководні</p>
-            
-            <p class="text-slate-300 text-sm leading-relaxed mb-6 font-light">
-              Мають особливі червоні та сині пігменти (фікобіліни), які вловлюють навіть крихти сонячного проміння на шалених глибинах.
-            </p>
-
-            <div class="space-y-2.5 text-xs text-slate-300">
-              <div class="flex items-center gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-rose-400 shrink-0"></i>
-                <span><strong>Порфіра:</strong> листи норі для суші</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-rose-400 shrink-0"></i>
-                <span><strong>Філофора:</strong> Чорноморські плантації</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-rose-400 shrink-0"></i>
-                <span><strong>Агар-агар:</strong> замінник желатину</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-8 pt-5 border-t border-white/10 flex items-center justify-between text-xs text-rose-300 font-semibold">
-            <span>Глибина: до 200–250 метрів</span>
-            <span class="px-2.5 py-1 rounded-full bg-rose-500/20">Фікоеритрин</span>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- ================= INTERACTIVE QUIZ SECTION ================= -->
-    <section id="quiz" class="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+    <!-- ================= INTERACTIVE QUIZ (PROJECTOR & MOBILE OPTIMIZED) ================= -->
+    <section id="quiz" class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
       
-      <!-- Quiz Header -->
-      <div class="text-center mb-10">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-3">
-          <i data-lucide="brain-circuit" class="w-4 h-4"></i>
-          Перевір свою ерудицію
-        </div>
-        <h2 class="font-outfit font-black text-3xl sm:text-5xl text-white tracking-tight mb-3">
-          Біологічна Вікторина: 7 Клас
+      <div class="text-center mb-8">
+        <span class="px-3.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 text-xs font-bold uppercase tracking-wider">
+          🧠 Перевірка знань
+        </span>
+        <h2 class="font-outfit font-black text-3xl sm:text-5xl text-white tracking-tight mt-2">
+          Експрес-Тест (5 Запитань)
         </h2>
-        <p class="text-slate-400 text-sm sm:text-base">
-          5 запитань для перевірки знань про таємниці водоростей. Клікай на відповідь та отримуй миттєвий результат!
+        <p class="text-slate-400 text-sm sm:text-base mt-1">
+          Ідеально для інтерактивної дошки або опитування в класі!
         </p>
       </div>
 
-      <!-- Main Quiz Card -->
-      <div class="glass-card rounded-3xl p-6 sm:p-10 border-cyan-400/30 shadow-2xl relative overflow-hidden" id="quiz-container">
+      <!-- Quiz Box -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border-cyan-400/40 shadow-2xl relative" id="quiz-card">
         
-        <!-- Quiz Progress Bar -->
-        <div class="mb-8">
-          <div class="flex items-center justify-between text-xs font-semibold text-slate-300 mb-2">
-            <span id="quiz-progress-text">Питання 1 з 5</span>
-            <span id="quiz-score-badge" class="text-cyan-300 font-mono">Бали: 0 / 5</span>
+        <!-- Progress bar -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between text-xs sm:text-sm font-bold mb-2">
+            <span id="quiz-counter" class="text-cyan-300">Питання 1 з 5</span>
+            <span id="quiz-score" class="text-emerald-400 font-mono">Бали: 0 / 5</span>
           </div>
-          <div class="w-full bg-ocean-abyss h-2.5 rounded-full overflow-hidden border border-white/10">
-            <div id="quiz-progress-fill" class="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 rounded-full transition-all duration-500" style="width: 20%;"></div>
+          <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-white/10">
+            <div id="quiz-progress-bar" class="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 rounded-full transition-all duration-300" style="width: 20%;"></div>
           </div>
         </div>
 
-        <!-- Question Body Area -->
-        <div id="quiz-question-box">
-          <h3 id="quiz-question-title" class="font-outfit font-bold text-xl sm:text-2xl text-white mb-6 leading-snug">
-            Завантаження запитання...
+        <!-- Question Title -->
+        <div id="quiz-active-area">
+          <h3 id="quiz-question" class="font-outfit font-bold text-lg sm:text-2xl text-white mb-6 leading-snug">
+            Завантаження...
           </h3>
 
-          <!-- Options Grid -->
-          <div id="quiz-options-container" class="space-y-3.5 mb-6">
-            <!-- Dynamic Buttons generated by JS -->
+          <!-- Options -->
+          <div id="quiz-options" class="space-y-3 mb-6">
+            <!-- Rendered by JS -->
           </div>
 
-          <!-- Educational Explanation Banner (Appears after answer) -->
-          <div id="quiz-explanation-box" class="hidden p-4 rounded-2xl bg-ocean-deep/90 border border-cyan-500/30 text-xs sm:text-sm text-slate-200 mt-4 animate-fade-in">
-            <div class="flex items-start gap-3">
-              <span id="quiz-feedback-icon" class="text-2xl shrink-0">💡</span>
-              <div>
-                <strong id="quiz-feedback-title" class="text-cyan-300 block mb-1">Пояснення:</strong>
-                <p id="quiz-feedback-text" class="text-slate-300 leading-relaxed"></p>
-              </div>
-            </div>
+          <!-- Instant explanation banner -->
+          <div id="quiz-hint" class="hidden p-4 rounded-xl bg-ocean-deep/90 border border-cyan-400/30 text-xs sm:text-sm text-slate-200">
+            <strong id="quiz-hint-title" class="block mb-0.5"></strong>
+            <span id="quiz-hint-text"></span>
           </div>
 
           <!-- Next Button -->
-          <div class="mt-8 flex justify-end">
-            <button id="quiz-next-btn" class="hidden px-7 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-500 to-emerald-400 text-slate-950 shadow-lg shadow-cyan-500/20 hover:scale-105 active:scale-95 transition flex items-center gap-2">
-              <span>Наступне питання</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <div class="mt-6 flex justify-end">
+            <button id="quiz-next" class="hidden px-6 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-400 to-emerald-400 text-slate-950 shadow-lg hover:scale-105 active:scale-95 transition">
+              Наступне питання ➔
             </button>
           </div>
         </div>
 
-        <!-- Result / Finished Screen (Hidden initially) -->
-        <div id="quiz-result-screen" class="hidden text-center py-6">
-          <div class="text-6xl mb-4 animate-bounce" id="quiz-trophy-icon">🏆</div>
-          <h3 class="font-outfit font-black text-3xl sm:text-4xl text-white mb-2" id="quiz-result-title">
-            Вітаємо!
+        <!-- Quiz Final Screen -->
+        <div id="quiz-finish" class="hidden text-center py-6">
+          <div class="text-6xl mb-3" id="quiz-trophy">🏆</div>
+          <h3 class="font-outfit font-black text-3xl sm:text-4xl text-white mb-2" id="quiz-result-header">
+            Чудовий результат!
           </h3>
-          <p class="text-slate-300 text-sm sm:text-base max-w-md mx-auto mb-6" id="quiz-result-desc">
-            Твій результат підраховано.
-          </p>
-
-          <!-- Result Score Card -->
-          <div class="glass-card max-w-xs mx-auto p-6 rounded-2xl border-cyan-400/40 mb-8">
-            <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-1">Твій фінальний рахунок</div>
-            <div class="font-outfit font-black text-5xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-emerald-400" id="quiz-final-score">
-              5 / 5
-            </div>
-            <div class="mt-2 text-xs font-bold text-emerald-400" id="quiz-badge-title">
-              🔱 Володар Океану
-            </div>
+          <p class="text-slate-300 text-sm sm:text-base mb-6" id="quiz-result-msg"></p>
+          
+          <div class="glass-card max-w-xs mx-auto p-5 rounded-2xl border-cyan-400/40 mb-6">
+            <div class="text-xs text-slate-400 uppercase font-semibold">Підсумковий бал</div>
+            <div class="font-outfit font-black text-5xl text-cyan-300 my-1" id="quiz-final-points">5 / 5</div>
+            <div class="text-xs font-bold text-emerald-400" id="quiz-rank-label">🔱 Знавець водоростей</div>
           </div>
 
-          <button id="quiz-restart-btn" class="px-8 py-3.5 rounded-xl font-bold text-sm bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/30 hover:scale-105 active:scale-95 transition inline-flex items-center gap-2">
-            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-            <span>Спробувати ще раз</span>
+          <button id="quiz-restart" class="px-8 py-3 rounded-xl font-bold text-sm bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-lg hover:scale-105 active:scale-95 transition">
+            🔄 Пройти ще раз
           </button>
         </div>
 
@@ -890,587 +498,355 @@
   </main>
 
   <!-- ================= FOOTER ================= -->
-  <footer class="mt-20 border-t border-white/10 glass-nav relative z-10 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-      
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-400 flex items-center justify-center shadow-lg">
-          <i data-lucide="waves" class="w-5 h-5 text-slate-950 stroke-[2.5]"></i>
-        </div>
-        <div>
-          <span class="font-outfit font-bold text-white text-base">AlgaeSphere • Освітня Біологія</span>
-          <p class="text-xs text-slate-400">Шкільна програма 7 класу (Україна) • Підводні дослідження</p>
-        </div>
+  <footer class="mt-16 border-t border-white/10 glass-nav py-8 text-center text-xs text-slate-400 px-4">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="font-bold text-white text-sm">
+        AlgaeSphere • Біологія 7 Клас
       </div>
-
-      <div class="text-xs text-slate-400 max-w-md">
-        Створено для цікавого та наочного вивчення природничих наук. Діліться знаннями та бережіть чистоту океанів і водойм України! 🌊🇺🇦
+      <div>
+        Оптимізовано для шкільних проекторів, інтерактивних дошок та смартфонів 🇺🇦
       </div>
-
-      <div class="flex items-center gap-4 text-xs text-cyan-400">
-        <a href="#about" class="hover:underline">Про водорості</a>
-        <a href="#facts" class="hover:underline">Факти</a>
-        <a href="#quiz" class="hover:underline">Тест</a>
+      <div class="text-cyan-400">
+        Урок про водорості
       </div>
-
     </div>
   </footer>
 
-
-  <!-- ================= JAVASCRIPT CODE ================= -->
+  <!-- ================= LOGIC SCRIPT ================= -->
   <script>
-    // Initialize Lucide Icons
     lucide.createIcons();
 
-    /* ============================================================
-       1. SYNTHESIZED WEB AUDIO SOUND EFFECTS (Zero audio dependencies)
-       ============================================================ */
-    class SoundEngine {
+    /* --- Sound Synthesizer (Zero dependencies) --- */
+    class MiniSound {
       constructor() {
         this.enabled = true;
         this.ctx = null;
       }
-
-      initContext() {
+      init() {
         if (!this.ctx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) {
-            this.ctx = new AudioContext();
-          }
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) this.ctx = new AC();
         }
-        if (this.ctx && this.ctx.state === 'suspended') {
-          this.ctx.resume();
-        }
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
       }
-
-      playPop() {
+      pop() {
         if (!this.enabled) return;
-        this.initContext();
+        this.init();
         if (!this.ctx) return;
-
-        try {
-          const now = this.ctx.currentTime;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.frequency.setValueAtTime(600 + Math.random() * 200, now);
+        osc.frequency.exponentialRampToValueAtTime(150, now + 0.07);
+        g.gain.setValueAtTime(0.18, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+        osc.connect(g);
+        g.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.07);
+      }
+      correct() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        [523.25, 659.25, 783.99].forEach((f, i) => {
           const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-
-          osc.type = 'sine';
-          // Fast pitch slide down (bubble pop)
-          osc.frequency.setValueAtTime(650 + Math.random() * 250, now);
-          osc.frequency.exponentialRampToValueAtTime(180, now + 0.08);
-
-          gain.gain.setValueAtTime(0.18, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-
-          osc.start(now);
-          osc.stop(now + 0.08);
-        } catch (e) {
-          console.warn('Audio error:', e);
-        }
+          const g = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(f, now + i * 0.06);
+          g.gain.setValueAtTime(0.12, now + i * 0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.3);
+          osc.connect(g);
+          g.connect(this.ctx.destination);
+          osc.start(now + i * 0.06);
+          osc.stop(now + i * 0.06 + 0.3);
+        });
       }
-
-      playCorrect() {
+      wrong() {
         if (!this.enabled) return;
-        this.initContext();
+        this.init();
         if (!this.ctx) return;
-
-        try {
-          const now = this.ctx.currentTime;
-          // Harmonic pleasant chord (C5 - E5 - G5)
-          [523.25, 659.25, 783.99].forEach((freq, i) => {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, now + i * 0.07);
-
-            gain.gain.setValueAtTime(0.12, now + i * 0.07);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.35);
-
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(now + i * 0.07);
-            osc.stop(now + i * 0.07 + 0.35);
-          });
-        } catch (e) {}
-      }
-
-      playWrong() {
-        if (!this.enabled) return;
-        this.initContext();
-        if (!this.ctx) return;
-
-        try {
-          const now = this.ctx.currentTime;
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(180, now);
-          osc.frequency.linearRampToValueAtTime(120, now + 0.22);
-
-          gain.gain.setValueAtTime(0.15, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-
-          osc.start(now);
-          osc.stop(now + 0.22);
-        } catch (e) {}
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.linearRampToValueAtTime(110, now + 0.2);
+        g.gain.setValueAtTime(0.14, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        osc.connect(g);
+        g.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.2);
       }
     }
+    const audio = new MiniSound();
 
-    const sound = new SoundEngine();
-
-    // Sound toggle UI handling
-    const soundBtn = document.getElementById('sound-toggle-btn');
-    const soundIconOn = document.getElementById('sound-icon-on');
-    const soundIconOff = document.getElementById('sound-icon-off');
-
+    // Sound toggle
+    const soundBtn = document.getElementById('sound-btn');
+    const soundOn = document.getElementById('sound-on');
+    const soundOff = document.getElementById('sound-off');
     soundBtn.addEventListener('click', () => {
-      sound.enabled = !sound.enabled;
-      if (sound.enabled) {
-        soundIconOn.classList.remove('hidden');
-        soundIconOff.classList.add('hidden');
-        sound.playPop();
+      audio.enabled = !audio.enabled;
+      soundOn.classList.toggle('hidden', !audio.enabled);
+      soundOff.classList.toggle('hidden', audio.enabled);
+      if (audio.enabled) audio.pop();
+    });
+
+    // Fullscreen for Projector
+    const fsBtn = document.getElementById('fullscreen-btn');
+    fsBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        document.body.classList.add('projector-mode');
       } else {
-        soundIconOn.classList.add('hidden');
-        soundIconOff.classList.remove('hidden');
+        document.exitFullscreen().catch(() => {});
+        document.body.classList.remove('projector-mode');
       }
     });
 
-    /* ============================================================
-       2. INTERACTIVE BUBBLE CANVAS SIMULATOR
-       ============================================================ */
+    /* --- Interactive Canvas Bubbles --- */
     const canvas = document.getElementById('bubbles-canvas');
     const ctx = canvas.getContext('2d');
-    let poppedCount = 0;
+    let popped = 0;
     const bubbleCountEl = document.getElementById('bubble-count');
 
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    let w = (canvas.width = window.innerWidth);
+    let h = (canvas.height = window.innerHeight);
 
     window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
     });
 
     class Bubble {
-      constructor(isInitial = false) {
-        this.reset(isInitial);
+      constructor(isInit = false) { this.reset(isInit); }
+      reset(isInit = false) {
+        this.r = Math.random() * 16 + 6;
+        this.x = Math.random() * w;
+        this.y = isInit ? Math.random() * h : h + this.r + Math.random() * 30;
+        this.speed = Math.random() * 1.1 + 0.6;
+        this.wobble = Math.random() * Math.PI * 2;
+        this.wobbleSpeed = Math.random() * 0.02 + 0.01;
+        this.amp = Math.random() * 15 + 8;
+        this.alpha = Math.random() * 0.4 + 0.2;
       }
-
-      reset(isInitial = false) {
-        this.radius = Math.random() * 18 + 5; // 5px to 23px
-        this.x = Math.random() * width;
-        this.y = isInitial ? Math.random() * height : height + this.radius + Math.random() * 40;
-        this.speed = Math.random() * 1.2 + 0.6; // upward speed
-        this.wobbleSpeed = Math.random() * 0.03 + 0.01;
-        this.wobbleAmp = Math.random() * 25 + 10;
-        this.wobbleAngle = Math.random() * Math.PI * 2;
-        this.alpha = Math.random() * 0.45 + 0.2;
-        this.highlightColor = 'rgba(255, 255, 255, ' + (this.alpha * 0.9) + ')';
-        this.bodyColor = 'rgba(56, 189, 248, ' + (this.alpha * 0.3) + ')';
-      }
-
       update() {
         this.y -= this.speed;
-        this.wobbleAngle += this.wobbleSpeed;
-        this.currentX = this.x + Math.sin(this.wobbleAngle) * this.wobbleAmp;
-
-        if (this.y < -this.radius * 2) {
-          this.reset(false);
-        }
+        this.wobble += this.wobbleSpeed;
+        this.curX = this.x + Math.sin(this.wobble) * this.amp;
+        if (this.y < -this.r * 2) this.reset(false);
       }
-
       draw() {
         ctx.save();
         ctx.beginPath();
-        ctx.arc(this.currentX, this.y, this.radius, 0, Math.PI * 2);
-
-        // Bubble body gradient
-        const grad = ctx.createRadialGradient(
-          this.currentX - this.radius * 0.3,
-          this.y - this.radius * 0.3,
-          this.radius * 0.1,
-          this.currentX,
-          this.y,
-          this.radius
-        );
-        grad.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
-        grad.addColorStop(0.6, 'rgba(56, 189, 248, 0.15)');
-        grad.addColorStop(1, 'rgba(6, 182, 212, 0.45)');
-
-        ctx.fillStyle = grad;
+        ctx.arc(this.curX, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56, 189, 248, ${this.alpha * 0.25})`;
         ctx.fill();
-
-        // Bubble border outline
         ctx.lineWidth = 1;
-        ctx.strokeStyle = 'rgba(186, 230, 253, ' + this.alpha + ')';
+        ctx.strokeStyle = `rgba(186, 230, 253, ${this.alpha})`;
         ctx.stroke();
-
-        // Highlight glint (reflection)
+        // highlight
         ctx.beginPath();
-        ctx.arc(
-          this.currentX - this.radius * 0.35,
-          this.y - this.radius * 0.35,
-          this.radius * 0.22,
-          0,
-          Math.PI * 2
-        );
+        ctx.arc(this.curX - this.r * 0.35, this.y - this.r * 0.35, this.r * 0.22, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
         ctx.fill();
-
         ctx.restore();
       }
-
-      isClicked(mx, my) {
-        const dx = (this.currentX || this.x) - mx;
+      clicked(mx, my) {
+        const dx = (this.curX || this.x) - mx;
         const dy = this.y - my;
-        return (dx * dx + dy * dy) <= (this.radius + 12) * (this.radius + 12);
+        return (dx * dx + dy * dy) <= (this.r + 14) * (this.r + 14);
       }
     }
 
-    // Number of bubbles based on screen size
-    const bubbleDensity = window.innerWidth < 640 ? 30 : 65;
-    const bubbles = Array.from({ length: bubbleDensity }, () => new Bubble(true));
-
-    function animateBubbles() {
-      ctx.clearRect(0, 0, width, height);
-      for (let i = 0; i < bubbles.length; i++) {
-        bubbles[i].update();
-        bubbles[i].draw();
-      }
-      requestAnimationFrame(animateBubbles);
+    const bubbleList = Array.from({ length: window.innerWidth < 640 ? 25 : 50 }, () => new Bubble(true));
+    function loop() {
+      ctx.clearRect(0, 0, w, h);
+      bubbleList.forEach(b => { b.update(); b.draw(); });
+      requestAnimationFrame(loop);
     }
-    animateBubbles();
+    loop();
 
-    // Click to POP bubble!
     canvas.addEventListener('click', (e) => {
       const rect = canvas.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const clickY = e.clientY - rect.top;
-
-      for (let i = 0; i < bubbles.length; i++) {
-        const b = bubbles[i];
-        if (b.isClicked(clickX, clickY)) {
-          sound.playPop();
-          poppedCount++;
-          bubbleCountEl.textContent = poppedCount;
-          b.reset(false);
-          break; // pop one at a time for precision
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      for (let i = 0; i < bubbleList.length; i++) {
+        if (bubbleList[i].clicked(mx, my)) {
+          audio.pop();
+          popped++;
+          bubbleCountEl.textContent = popped;
+          bubbleList[i].reset(false);
+          break;
         }
       }
     });
 
-    /* ============================================================
-       3. DEPTH SENSOR & SCROLL LISTENER
-       ============================================================ */
-    const depthIndicator = document.getElementById('depth-indicator');
-    const depthZone = document.getElementById('depth-zone');
-
-    window.addEventListener('scroll', () => {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const currentScroll = window.scrollY;
-      const scrollFraction = maxScroll > 0 ? Math.min(Math.max(currentScroll / maxScroll, 0), 1) : 0;
-      
-      // Calculate depth from 0m to 210m
-      const calculatedDepth = Math.round(scrollFraction * 210);
-      depthIndicator.textContent = calculatedDepth;
-
-      if (calculatedDepth < 30) {
-        depthZone.textContent = '(Поверхня / Зелені)';
-        depthZone.className = 'text-[11px] font-normal text-emerald-400 ml-1';
-      } else if (calculatedDepth < 110) {
-        depthZone.textContent = '(Бурі ліси)';
-        depthZone.className = 'text-[11px] font-normal text-amber-400 ml-1';
-      } else {
-        depthZone.textContent = '(Безодня / Багрянки)';
-        depthZone.className = 'text-[11px] font-normal text-rose-400 ml-1';
-      }
-    });
-
-    /* ============================================================
-       4. FACT CATEGORY FILTER
-       ============================================================ */
-    const filterButtons = document.querySelectorAll('.fact-filter-btn');
-    const factCards = document.querySelectorAll('.fact-card');
-
-    filterButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        sound.playPop();
-        const filter = btn.getAttribute('data-filter');
-
-        // Toggle active button style
-        filterButtons.forEach(b => {
-          b.className = 'fact-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition glass-card text-slate-300 hover:text-white';
-        });
-        btn.className = 'fact-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition bg-cyan-500 text-slate-950 shadow-md';
-
-        // Filter cards
-        factCards.forEach(card => {
-          const category = card.getAttribute('data-category');
-          if (filter === 'all' || category === filter) {
-            card.style.display = 'flex';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
-    });
-
-    /* ============================================================
-       5. 7TH GRADE BIOLOGY QUIZ LOGIC
-       ============================================================ */
-    const quizQuestions = [
+    /* --- Quiz Data: 7th Grade Biology (Minimal Text, High Precision) --- */
+    const questions = [
       {
-        question: "1. Яка група водоростей здатна рости на найбільших глибинах (понад 200 м) завдяки червоним пігментам?",
-        options: [
-          "Бурі водорості",
-          "Червоні водорості (багрянки)",
-          "Зелені нитчасті водорості",
-          "Діатомові водорості"
+        q: "1. Яка група водоростей здатна жити на найбільших глибинах океану (понад 200 м)?",
+        opts: ["Бурі водорості", "Червоні водорості (багрянки)", "Зелені водорості", "Діатомові водорості"],
+        correct: 1,
+        hint: "Червоні пігменти (фікобіліни) найкраще вловлюють залишки слабкого синього світла на глибині."
+      },
+      {
+        q: "2. Яка зелена одноклітинна водорость має червоне «вічко» (стигму) та два джгутики?",
+        opts: ["Хлорела", "Ламінарія", "Хламідомонада", "Спірогіра"],
+        correct: 2,
+        hint: "Хламідомонада використовує стигму, щоб знаходити світло для фотосинтезу (позитивний фототаксис)."
+      },
+      {
+        q: "3. З якої речовини червоних водоростей виготовляють мармелад, зефір та пастилу?",
+        opts: ["Агар-агар", "Крохмаль", "Йод", "Хлорофіл"],
+        correct: 0,
+        hint: "Агар-агар видобувають з багрянок — це рослинний замінник желатину в харчовій промисловості."
+      },
+      {
+        q: "4. Яка бура водорость відома як «морська капуста» і захищає щитоподібну залозу людини?",
+        opts: ["Ульва", "Порфіра", "Ламінарія", "Саргасум"],
+        correct: 2,
+        hint: "Ламінарія містить рекордну концентрацію органічного йоду, необхідного для здоров'я."
+      },
+      {
+        q: "5. Чому водорості називають «нижчими рослинами»?",
+        opts: [
+          "Вони ростуть тільки на великій глибині",
+          "Їхнє тіло (слань) не поділене на справжні органи і тканини",
+          "Вони взагалі не утворюють кисню",
+          "Вони розмножуються виключно насінням"
         ],
         correct: 1,
-        explanation: "Червоні водорості містять пігменти фікобіліни (фікоеритрин), які вловлюють залишки синьо-зеленого спектра світла, що проникає на максимальні глибини океану."
-      },
-      {
-        question: "2. Яка одноклітинна зелена водорость має два джгутики та світлочутливе вічко (стигму)?",
-        options: [
-          "Хлорела",
-          "Спірогіра",
-          "Хламідомонада",
-          "Ламінарія"
-        ],
-        correct: 2,
-        explanation: "Хламідомонада активно рухається за допомогою двох джгутиків, а її червоне вічко (стигма) визначає напрямок до джерела світла для фотосинтезу (позитивний фототаксис)."
-      },
-      {
-        question: "3. З якої драглистої речовини червоних водоростей роблять мармелад, зефір та поживне середовище для мікробів?",
-        options: [
-          "Йод",
-          "Крохмаль",
-          "Агар-агар",
-          "Хлорофіл"
-        ],
-        correct: 2,
-        explanation: "Агар-агар — це полісахарид, який добувають з багрянок (червоних водоростей). Він не плавиться при кімнатній температурі й утворює стійкі гелі для кулінарії та медицини."
-      },
-      {
-        question: "4. Яка морська бура водорость відома як «морська капуста» і є рекордсменом за вмістом життєво необхідного йоду?",
-        options: [
-          "Ульва",
-          "Ламінарія",
-          "Порфіра",
-          "Спірогіра"
-        ],
-        correct: 1,
-        explanation: "Ламінарія — це бура водорость зі сланню у формі довгих стрічок. Вона активно накопичує йод з морської води, захищаючи людину від захворювань щитоподібної залози."
-      },
-      {
-        question: "5. Чому водорості відносять до нижчих рослин, на відміну від дерев чи квітів?",
-        options: [
-          "Вони не здатні до фотосинтезу",
-          "Вони живуть виключно в темряві",
-          "Їхнє тіло (слань) не має справжніх тканин і органів",
-          "Вони розмножуються тільки насінням"
-        ],
-        correct: 2,
-        explanation: "Тіло водоростей називається сланню (або таломом). Воно не розділене на корінь, стебло та листки і не має провідних тканин — поживні речовини вбираються всією поверхнею."
+        hint: "У водоростей немає справжніх коренів, стебел та листків — їхнє тіло називається сланню (таломом)."
       }
     ];
 
-    let currentQuestionIdx = 0;
-    let quizScore = 0;
-    let questionAnswered = false;
+    let currentQ = 0;
+    let score = 0;
+    let answered = false;
 
-    // Elements
-    const quizProgressText = document.getElementById('quiz-progress-text');
-    const quizScoreBadge = document.getElementById('quiz-score-badge');
-    const quizProgressFill = document.getElementById('quiz-progress-fill');
-    const quizQuestionTitle = document.getElementById('quiz-question-title');
-    const quizOptionsContainer = document.getElementById('quiz-options-container');
-    const quizExplanationBox = document.getElementById('quiz-explanation-box');
-    const quizFeedbackIcon = document.getElementById('quiz-feedback-icon');
-    const quizFeedbackTitle = document.getElementById('quiz-feedback-title');
-    const quizFeedbackText = document.getElementById('quiz-feedback-text');
-    const quizNextBtn = document.getElementById('quiz-next-btn');
+    const qCounter = document.getElementById('quiz-counter');
+    const qScore = document.getElementById('quiz-score');
+    const qBar = document.getElementById('quiz-progress-bar');
+    const qText = document.getElementById('quiz-question');
+    const qOpts = document.getElementById('quiz-options');
+    const qHint = document.getElementById('quiz-hint');
+    const qHintTitle = document.getElementById('quiz-hint-title');
+    const qHintText = document.getElementById('quiz-hint-text');
+    const qNext = document.getElementById('quiz-next');
 
-    const quizQuestionBox = document.getElementById('quiz-question-box');
-    const quizResultScreen = document.getElementById('quiz-result-screen');
-    const quizFinalScore = document.getElementById('quiz-final-score');
-    const quizBadgeTitle = document.getElementById('quiz-badge-title');
-    const quizResultDesc = document.getElementById('quiz-result-desc');
-    const quizTrophyIcon = document.getElementById('quiz-trophy-icon');
-    const quizRestartBtn = document.getElementById('quiz-restart-btn');
+    const activeArea = document.getElementById('quiz-active-area');
+    const finishArea = document.getElementById('quiz-finish');
+    const finalPoints = document.getElementById('quiz-final-points');
+    const rankLabel = document.getElementById('quiz-rank-label');
+    const resultMsg = document.getElementById('quiz-result-msg');
+    const restartBtn = document.getElementById('quiz-restart');
 
-    function renderQuestion(idx) {
-      questionAnswered = false;
-      const q = quizQuestions[idx];
+    function loadQuestion(i) {
+      answered = false;
+      const data = questions[i];
+      qCounter.textContent = `Питання ${i + 1} з ${questions.length}`;
+      qBar.style.width = `${((i + 1) / questions.length) * 100}%`;
+      qScore.textContent = `Бали: ${score} / ${questions.length}`;
+      qText.textContent = data.q;
+      qHint.classList.add('hidden');
+      qNext.classList.add('hidden');
 
-      // Update progress
-      quizProgressText.textContent = `Питання ${idx + 1} з ${quizQuestions.length}`;
-      quizProgressFill.style.width = `${((idx + 1) / quizQuestions.length) * 100}%`;
-      quizScoreBadge.textContent = `Бали: ${quizScore} / ${quizQuestions.length}`;
-
-      quizQuestionTitle.textContent = q.question;
-      quizExplanationBox.classList.add('hidden');
-      quizNextBtn.classList.add('hidden');
-
-      // Generate Option Buttons
-      quizOptionsContainer.innerHTML = '';
-      q.options.forEach((optText, optIdx) => {
+      qOpts.innerHTML = '';
+      data.opts.forEach((opt, optIndex) => {
         const btn = document.createElement('button');
-        btn.className = `w-full text-left p-4 rounded-xl border border-white/10 bg-ocean-deep/60 hover:bg-ocean-deep/90 hover:border-cyan-400/40 text-sm font-medium text-slate-200 transition flex items-center justify-between group`;
-        
+        btn.className = `w-full text-left p-3.5 sm:p-4 rounded-xl border border-white/10 bg-ocean-deep/70 hover:bg-ocean-deep hover:border-cyan-400/50 text-sm sm:text-base font-semibold text-slate-100 transition flex items-center justify-between group active:scale-[0.99]`;
         btn.innerHTML = `
           <span class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center font-mono text-xs text-cyan-300 group-hover:border-cyan-400/60">
-              ${['A', 'Б', 'В', 'Г'][optIdx]}
+            <span class="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center text-xs font-mono text-cyan-300">
+              ${['A', 'Б', 'В', 'Г'][optIndex]}
             </span>
-            <span>${optText}</span>
+            <span>${opt}</span>
           </span>
-          <span class="option-status-icon text-base opacity-0 transition-opacity"></span>
+          <span class="status-mark text-lg"></span>
         `;
-
-        btn.addEventListener('click', () => handleOptionSelect(optIdx, btn));
-        quizOptionsContainer.appendChild(btn);
+        btn.addEventListener('click', () => pickOption(optIndex, btn));
+        qOpts.appendChild(btn);
       });
     }
 
-    function handleOptionSelect(selectedIdx, clickedBtn) {
-      if (questionAnswered) return;
-      questionAnswered = true;
+    function pickOption(idx, btnEl) {
+      if (answered) return;
+      answered = true;
+      const q = questions[currentQ];
+      const allBtns = qOpts.querySelectorAll('button');
 
-      const q = quizQuestions[currentQuestionIdx];
-      const isCorrect = selectedIdx === q.correct;
-      const allOptionButtons = quizOptionsContainer.querySelectorAll('button');
-
-      if (isCorrect) {
-        sound.playCorrect();
-        quizScore++;
-        quizScoreBadge.textContent = `Бали: ${quizScore} / ${quizQuestions.length}`;
-
-        clickedBtn.className = `w-full text-left p-4 rounded-xl border-2 border-emerald-400 bg-emerald-950/60 text-sm font-semibold text-emerald-200 flex items-center justify-between shadow-lg shadow-emerald-500/20`;
-        const iconSpan = clickedBtn.querySelector('.option-status-icon');
-        iconSpan.innerHTML = '✅';
-        iconSpan.classList.remove('opacity-0');
-
-        quizFeedbackIcon.textContent = '🎉';
-        quizFeedbackTitle.textContent = 'Правильно! Молодець!';
-        quizFeedbackTitle.className = 'text-emerald-300 font-bold block mb-1';
+      if (idx === q.correct) {
+        audio.correct();
+        score++;
+        qScore.textContent = `Бали: ${score} / ${questions.length}`;
+        btnEl.className = 'w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-emerald-400 bg-emerald-950/70 text-sm sm:text-base font-bold text-emerald-200 flex items-center justify-between shadow-lg shadow-emerald-500/20';
+        btnEl.querySelector('.status-mark').textContent = '✅';
+        qHintTitle.textContent = '🎉 Вірно!';
+        qHintTitle.className = 'block mb-0.5 text-emerald-300 font-bold';
       } else {
-        sound.playWrong();
+        audio.wrong();
+        btnEl.className = 'w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-rose-500 bg-rose-950/70 text-sm sm:text-base font-bold text-rose-200 flex items-center justify-between shadow-lg shadow-rose-500/20';
+        btnEl.querySelector('.status-mark').textContent = '❌';
 
-        clickedBtn.className = `w-full text-left p-4 rounded-xl border-2 border-rose-500 bg-rose-950/60 text-sm font-semibold text-rose-200 flex items-center justify-between shadow-lg shadow-rose-500/20`;
-        const wrongIconSpan = clickedBtn.querySelector('.option-status-icon');
-        wrongIconSpan.innerHTML = '❌';
-        wrongIconSpan.classList.remove('opacity-0');
+        // Highlight correct button
+        const correctBtn = allBtns[q.correct];
+        correctBtn.className = 'w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-emerald-400 bg-emerald-950/50 text-sm sm:text-base font-bold text-emerald-200 flex items-center justify-between';
+        correctBtn.querySelector('.status-mark').textContent = '✅';
 
-        // Highlight the correct answer in emerald
-        const correctBtn = allOptionButtons[q.correct];
-        correctBtn.className = `w-full text-left p-4 rounded-xl border-2 border-emerald-400 bg-emerald-950/40 text-sm font-semibold text-emerald-200 flex items-center justify-between`;
-        const correctIconSpan = correctBtn.querySelector('.option-status-icon');
-        correctIconSpan.innerHTML = '✅';
-        correctIconSpan.classList.remove('opacity-0');
-
-        quizFeedbackIcon.textContent = '💡';
-        quizFeedbackTitle.textContent = 'Не зовсім так, але це чудова нагода запам\'ятати!';
-        quizFeedbackTitle.className = 'text-cyan-300 font-bold block mb-1';
+        qHintTitle.textContent = '💡 Запам\'ятайте:';
+        qHintTitle.className = 'block mb-0.5 text-cyan-300 font-bold';
       }
 
-      // Display Explanation
-      quizFeedbackText.textContent = q.explanation;
-      quizExplanationBox.classList.remove('hidden');
-
-      // Show Next or Finish button
-      quizNextBtn.classList.remove('hidden');
-      if (currentQuestionIdx === quizQuestions.length - 1) {
-        quizNextBtn.innerHTML = `<span>Завершити вікторину</span> <i data-lucide="award" class="w-4 h-4"></i>`;
-      } else {
-        quizNextBtn.innerHTML = `<span>Наступне питання</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+      qHintText.textContent = q.hint;
+      qHint.classList.remove('hidden');
+      qNext.classList.remove('hidden');
+      if (currentQ === questions.length - 1) {
+        qNext.textContent = 'Завершити тест 🏆';
       }
-      lucide.createIcons();
     }
 
-    quizNextBtn.addEventListener('click', () => {
-      sound.playPop();
-      if (currentQuestionIdx < quizQuestions.length - 1) {
-        currentQuestionIdx++;
-        renderQuestion(currentQuestionIdx);
+    qNext.addEventListener('click', () => {
+      audio.pop();
+      if (currentQ < questions.length - 1) {
+        currentQ++;
+        loadQuestion(currentQ);
       } else {
         showResults();
       }
     });
 
     function showResults() {
-      quizQuestionBox.classList.add('hidden');
-      quizResultScreen.classList.remove('hidden');
+      activeArea.classList.add('hidden');
+      finishArea.classList.remove('hidden');
+      finalPoints.textContent = `${score} / ${questions.length}`;
 
-      quizFinalScore.textContent = `${quizScore} / ${quizQuestions.length}`;
-
-      if (quizScore === 5) {
-        quizTrophyIcon.textContent = '🔱';
-        quizBadgeTitle.textContent = '🔱 Володар Океану (5/5)';
-        quizBadgeTitle.className = 'mt-2 text-xs font-bold text-cyan-400';
-        quizResultDesc.textContent = 'Фантастично! Твої знання з біології водоростей бездоганні, ти знаєш тему на всі 100%!';
-        launchConfetti();
-      } else if (quizScore >= 3) {
-        quizTrophyIcon.textContent = '🤿';
-        quizBadgeTitle.textContent = '🤿 Глибоководний Дослідник (3-4/5)';
-        quizBadgeTitle.className = 'mt-2 text-xs font-bold text-emerald-400';
-        quizResultDesc.textContent = 'Чудова робота! Ти впевнено орієнтуєшся у світі водоростей та розрізняєш основні групи.';
-        launchConfetti();
+      if (score === 5) {
+        rankLabel.textContent = '🔱 Володар Океану (5/5)';
+        resultMsg.textContent = 'Ідеально! Тему водоростей засвоєно на всі 100%!';
+        confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
+      } else if (score >= 3) {
+        rankLabel.textContent = '🤿 Дослідник Глибин (3-4/5)';
+        resultMsg.textContent = 'Гарна робота! Основні групи водоростей ти знаєш впевнено.';
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
       } else {
-        quizTrophyIcon.textContent = '🧭';
-        quizBadgeTitle.textContent = '🫧 Шукач Підводних Скарбів';
-        quizBadgeTitle.className = 'mt-2 text-xs font-bold text-amber-400';
-        quizResultDesc.textContent = 'Гарна спроба! Переглянь картки фактів вище ще раз і спробуй піднятися на вершину рейтингу!';
+        rankLabel.textContent = '🫧 Юний Натураліст';
+        resultMsg.textContent = 'Гарна спроба! Переглянь короткі картки вгорі та повтори тест.';
       }
     }
 
-    function launchConfetti() {
-      if (typeof confetti === 'function') {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#06b6d4', '#10b981', '#38bdf8', '#fbbf24']
-        });
-      }
-    }
-
-    quizRestartBtn.addEventListener('click', () => {
-      sound.playPop();
-      quizScore = 0;
-      currentQuestionIdx = 0;
-      quizResultScreen.classList.add('hidden');
-      quizQuestionBox.classList.remove('hidden');
-      renderQuestion(0);
+    restartBtn.addEventListener('click', () => {
+      audio.pop();
+      score = 0;
+      currentQ = 0;
+      finishArea.classList.add('hidden');
+      activeArea.classList.remove('hidden');
+      loadQuestion(0);
     });
 
-    // Start Question 1
-    renderQuestion(0);
-
-    /* ============================================================
-       6. MOBILE MENU TOGGLE
-       ============================================================ */
-    const mobileBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const mobileLinks = document.querySelectorAll('.mobile-link');
-
-    mobileBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-      });
-    });
-
+    loadQuestion(0);
   </script>
 </body>
 </html>
