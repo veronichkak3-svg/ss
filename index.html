@@ -255,10 +255,6 @@
 
     </section>
 
-      </div>
-
-    </section>
-
 
     <!-- ================= BLOCK 3: DEPTH SCALE (NEW!) ================= -->
     <section id="depth" class="max-w-5xl mx-auto px-4 sm:px-6">
@@ -709,33 +705,82 @@
         ctx.restore();
       }
       isHit(mx, my) {
-        const dx = (this.curX || this.x) - mx;
+        const bx = this.curX || this.x;
+        const dx = bx - mx;
         const dy = this.y - my;
-        return (dx * dx + dy * dy) <= (this.r + 14) * (this.r + 14);
+        const hitRadius = this.r + 25;
+        return (dx * dx + dy * dy) <= (hitRadius * hitRadius);
       }
     }
 
+    class PopSplash {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 2.5 + 1.2;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.r = Math.random() * 3 + 2;
+        this.alpha = 0.95;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= 0.05;
+      }
+      draw() {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(153, 246, 228, ${this.alpha})`;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    const splashes = [];
     const bubbles = Array.from({ length: window.innerWidth < 640 ? 25 : 45 }, () => new Bubble(true));
+
     function render() {
       ctx.clearRect(0, 0, width, height);
       bubbles.forEach(b => { b.update(); b.draw(); });
+      for (let i = splashes.length - 1; i >= 0; i--) {
+        splashes[i].update();
+        splashes[i].draw();
+        if (splashes[i].alpha <= 0) splashes.splice(i, 1);
+      }
       requestAnimationFrame(render);
     }
     render();
 
-    canvas.addEventListener('click', (e) => {
-      const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
+    function attemptPop(clientX, clientY) {
       for (let i = 0; i < bubbles.length; i++) {
-        if (bubbles[i].isHit(mx, my)) {
+        const b = bubbles[i];
+        if (b.isHit(clientX, clientY)) {
           sound.pop();
           poppedCount++;
           bubbleCountEl.textContent = poppedCount;
-          bubbles[i].reset(false);
-          break;
+          for (let s = 0; s < 6; s++) {
+            splashes.push(new PopSplash(b.curX || b.x, b.y));
+          }
+          b.reset(false);
+          return true;
         }
       }
+      return false;
+    }
+
+    // Global listener for touch and mouse
+    window.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('button, a, input, select, textarea, [role="button"], #quiz-options, .myth-card')) {
+        return;
+      }
+      attemptPop(e.clientX, e.clientY);
+    });
+
+    canvas.addEventListener('click', (e) => {
+      attemptPop(e.clientX, e.clientY);
     });
 
     /* ============================================================
@@ -936,32 +981,32 @@
     const quizData = [
       {
         question: "Яка водорость відома як «морська капуста» та багата на йод?",
-        options: ["Ламінарія", "Хлорела", "Спірогіра"],
-        correct: 0,
-        hint: "Ламінарія — це бура водорость, яка накопичує йод із морської води."
+        options: ["Хлорела", "Ламінарія", "Спірогіра"],
+        correct: 1,
+        hint: "Ламінарія — це бура водорость, яка накопичує йод із морської води для здоров'я людини."
       },
       {
         question: "Яку зелену морську водорость з широкою пластинчастою сланню називають «морським салатом»?",
-        options: ["Ульва", "Спірогіра", "Ламінарія"],
-        correct: 0,
+        options: ["Спірогіра", "Ламінарія", "Ульва"],
+        correct: 2,
         hint: "Ульва — це зелена морська водорость, багата на вітаміни та мікроелементи, яку вживають у їжу."
       },
       {
         question: "З якої речовини червоних водоростей виготовляють мармелад та зефір?",
         options: ["Агар-агар", "Крохмаль", "Цукровий пісок"],
         correct: 0,
-        hint: "Агар-агар — це природний желюючий компонент із багрянок."
+        hint: "Агар-агар — це природний желюючий компонент із багрянок, що замінює желатин."
       },
       {
         question: "Хто виробляє найбільшу частку кисню на нашій планеті?",
-        options: ["Океанічні мікроводорості та планктон", "Тільки кімнатні рослини", "Гриби в лісі"],
-        correct: 0,
-        hint: "Понад 50-70% усього кисню синтезують саме мікроскопічні жителі води."
+        options: ["Тільки кімнатні рослини", "Океанічні мікроводорості та планктон", "Гриби в лісі"],
+        correct: 1,
+        hint: "Понад 50-70% усього кисню біосфери синтезують саме мікроскопічні жителі води."
       },
       {
         question: "Чи є у водоростей справжні корені, стебла та листки?",
-        options: ["Ні, їхнє тіло — це слань (талом)", "Так, як і в дуба чи яблуні", "Є тільки коріння"],
-        correct: 0,
+        options: ["Так, як і в дуба чи яблуні", "Ні, їхнє тіло — це слань (талом)", "Є тільки коріння"],
+        correct: 1,
         hint: "Водорості не розділені на справжні органи, тому їх називають нижчими рослинами."
       }
     ];
