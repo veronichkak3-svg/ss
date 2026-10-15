@@ -193,8 +193,8 @@
         
         <!-- Specimen selector tabs -->
         <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8" id="micro-tabs">
-          <button data-specimen="chlamy" class="micro-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-teal-300 text-slate-950 shadow-md transition">
-            🔬 Хламідомонада
+          <button data-specimen="chlorella" class="micro-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-teal-300 text-slate-950 shadow-md transition">
+            🟢 Хлорела
           </button>
           <button data-specimen="spiro" class="micro-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white/10 hover:bg-white/20 text-white transition">
             🧬 Спірогіра
@@ -222,7 +222,7 @@
 
               <!-- Zoom Badge -->
               <div class="absolute bottom-4 text-[10px] font-mono uppercase tracking-widest text-teal-300/80 bg-slate-950/70 px-2.5 py-1 rounded-full border border-teal-300/20">
-                Збільшення: <span id="micro-zoom">400x</span>
+                Збільшення: <span id="micro-zoom">1000x</span>
               </div>
             </div>
           </div>
@@ -234,11 +234,11 @@
             </div>
             
             <h3 class="font-unbounded font-bold text-2xl text-white" id="specimen-name">
-              Хламідомонада
+              Хлорела
             </h3>
 
             <p class="text-xs sm:text-sm text-cyan-100/90 leading-relaxed" id="specimen-desc">
-              Рухлива краплеподібна клітина, яка активно пливе туди, де є сонячні промені.
+              Ідеальна куляста мікроводорість, справжня фабрика чистого кисню та рослинного білка.
             </p>
 
             <div class="space-y-2 pt-2 text-xs sm:text-sm" id="specimen-parts">
@@ -336,15 +336,15 @@
             <ul class="space-y-2.5 text-xs sm:text-sm text-cyan-50">
               <li class="flex items-start gap-2">
                 <span class="text-emerald-300 font-bold">•</span>
-                <span><strong>Хламідомонада:</strong> червоне вічко (стигма) та 2 джгутики.</span>
+                <span><strong>Ульва (морський салат):</strong> яскраво-зелена пластинчаста водорость, яку їдять люди.</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="text-emerald-300 font-bold">•</span>
-                <span><strong>Хлорела:</strong> високий вміст білка, літала в космос.</span>
+                <span><strong>Хлорела:</strong> куляста клітина, що виробляє колосальну кількість кисню.</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="text-emerald-300 font-bold">•</span>
-                <span><strong>Спірогіра:</strong> спіральний хроматофор у вигляді стрічки.</span>
+                <span><strong>Спірогіра:</strong> нитчаста зі спіральним хроматофором у вигляді стрічки.</span>
               </li>
             </ul>
           </div>
@@ -507,7 +507,7 @@
             <span class="myth-icon text-teal-300 font-bold text-xl">＋</span>
           </div>
           <div class="myth-answer hidden mt-3 pt-3 border-t border-white/10 text-xs sm:text-sm text-cyan-100">
-            ✅ <strong>Це правда!</strong> Одноклітинні водорості ростуть на вологій корі дерев, парканах і навіть високо в горах на льодовиках (хламідомонада нівальна забарвлює гірський сніг у рожевий колір із запахом кавуна!).
+            ✅ <strong>Це правда!</strong> Одноклітинні зелені водорості (як-от плеврокок) масово живуть на суходолі — на вологій корі дерев, камінні та парканах, утворюючи красивий зелений наліт.
           </div>
         </div>
 
@@ -735,25 +735,21 @@
        MICROSCOPE MODULE
        ============================================================ */
     const specimens = {
-      chlamy: {
-        name: "Хламідомонада",
+      chlorella: {
+        name: "Хлорела",
         badge: "Одноклітинна зелена водорость",
-        desc: "Мікроскопічна рухлива клітина грушоподібної форми. Сама пливе на сонячне світло, загрібаючи джгутиками.",
-        zoom: "600x",
+        desc: "Ідеальна куляста мікроводорість, справжня фабрика фотосинтезу. Не має джгутиків і нерухомо ширяє у товщі води.",
+        zoom: "1000x",
         parts: [
-          "🔴 <strong>Стигма (вічко):</strong> червона цятка, що реагує на світло.",
-          "🏊 <strong>2 джгутики:</strong> забезпечують швидкий рух уперед.",
-          "🥣 <strong>Чашоподібний хроматофор:</strong> містить хлорофіл для фотосинтезу."
+          "🟢 <strong>Чашоподібний хроматофор:</strong> забезпечує інтенсивний фотосинтез.",
+          "💪 <strong>50% чистого білка:</strong> містить вітаміни та цінні поживні речовини.",
+          "🚀 <strong>Кисневий генератор:</strong> досліджується як джерело кисню для космонавтів."
         ],
         svg: `
-          <div class="relative w-36 h-48 rounded-[50%_50%_45%_45%] bg-gradient-to-b from-emerald-400 to-teal-600 border-2 border-emerald-200 shadow-inner flex items-center justify-center animate-pulse">
-            <!-- Flagella -->
-            <div class="absolute -top-7 left-10 w-1 h-8 bg-emerald-200 rotate-[-25deg] origin-bottom rounded-full"></div>
-            <div class="absolute -top-7 right-10 w-1 h-8 bg-emerald-200 rotate-[25deg] origin-bottom rounded-full"></div>
-            <!-- Red Eye (Stigma) -->
-            <div class="absolute top-10 right-6 w-3.5 h-3.5 bg-red-500 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.8)] border border-white"></div>
-            <!-- Nucleus -->
-            <div class="w-10 h-10 rounded-full bg-teal-900/60 border border-teal-200/50 flex items-center justify-center text-[10px] text-teal-200 font-mono">Ядро</div>
+          <div class="w-36 h-36 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-400 to-emerald-200 border-2 border-emerald-100 shadow-[0_0_25px_rgba(52,211,153,0.5)] flex items-center justify-center relative animate-pulse">
+            <div class="w-24 h-24 rounded-full bg-emerald-800/60 border border-emerald-300/60 flex items-center justify-center">
+              <div class="w-8 h-8 rounded-full bg-teal-950/80 border border-white/60 flex items-center justify-center text-[9px] text-teal-200 font-mono">Ядро</div>
+            </div>
           </div>
         `
       },
@@ -840,7 +836,7 @@
       });
     });
 
-    setSpecimen('chlamy');
+    setSpecimen('chlorella');
 
     /* ============================================================
        DEPTH MODULE
@@ -927,10 +923,10 @@
         hint: "Ламінарія — це бура водорость, яка накопичує йод із морської води."
       },
       {
-        question: "За допомогою чого хламідомонада визначає, де знаходиться світло?",
-        options: ["Червоне вічко (стигма)", "Корінець", "Хлорофіловий хоботок"],
+        question: "Яку зелену морську водорость з широкою пластинчастою сланню називають «морським салатом»?",
+        options: ["Ульва", "Спірогіра", "Ламінарія"],
         correct: 0,
-        hint: "Стигма вловлює світлові промені, допомагаючи клітині плисти на світло."
+        hint: "Ульва — це зелена морська водорость, багата на вітаміни та мікроелементи, яку вживають у їжу."
       },
       {
         question: "З якої речовини червоних водоростей виготовляють мармелад та зефір?",
